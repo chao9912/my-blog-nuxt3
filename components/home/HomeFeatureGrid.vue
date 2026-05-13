@@ -1,24 +1,28 @@
 <template>
   <section class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
     <article
-      v-for="item in features"
+      v-for="(item, index) in features"
       :key="item.title"
-      class="rounded-[24px] border border-slate-100 bg-white p-5 transition hover:-translate-y-0.5 hover:shadow-lg lg:p-6"
+      class="group relative overflow-hidden rounded-xl border border-slate-100 bg-white p-4 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg lg:p-5"
     >
-      <div
-        class="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl text-2xl text-white lg:h-16 lg:w-16"
-        :class="item.bg"
-      >
-        {{ item.icon }}
+      <div class="flex items-start gap-3">
+        <div
+          class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-lg text-white lg:h-12 lg:w-12 lg:text-xl"
+          :class="item.bg"
+        >
+          {{ item.icon }}
+        </div>
+
+        <div class="min-w-0">
+          <h3 class="text-sm font-bold text-slate-900 lg:text-base">
+            {{ item.title }}
+          </h3>
+
+          <p class="mt-0.5 text-xs text-slate-400 lg:text-sm">
+            {{ item.desc }}
+          </p>
+        </div>
       </div>
-
-      <h3 class="text-xl font-bold text-slate-900 lg:text-2xl">
-        {{ item.title }}
-      </h3>
-
-      <p class="mt-2 text-sm text-slate-400 lg:text-base">
-        {{ item.desc }}
-      </p>
     </article>
   </section>
 </template>
@@ -47,7 +51,7 @@ const features = [
     title: '联系方式',
     desc: '与我取得联系',
     icon: '📞',
-    bg: 'bg-sky-500'
+    bg: 'bg-blue-500'
   },
   {
     title: '博客导航',
