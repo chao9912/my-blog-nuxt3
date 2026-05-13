@@ -18,9 +18,7 @@ function setFilter(key: string) {
   <div class="flex items-center gap-1">
     <client-only>
       <n-tabs :default-value="activeFilter" animated size="large">
-        <n-tab-pane :name="item.key" :tab=" item.label" v-for="item in filters" :key="item.key">
-          <slot></slot>
-        </n-tab-pane>
+        <n-tab-pane :name="item.key" :tab=" item.label" v-for="item in filters" :key="item.key"></n-tab-pane>
       </n-tabs>
     </client-only>
   </div>
