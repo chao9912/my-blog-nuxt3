@@ -1,12 +1,21 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-import { fileURLToPath } from 'node:url'
+
 import Components from 'unplugin-vue-components/vite'
 import AutoImport from 'unplugin-auto-import/vite'
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 
-const rootDir = fileURLToPath(new URL('./', import.meta.url))
-
 export default defineNuxtConfig({
+  compatibilityDate: '2026-05-13',
+
+  ssr: true,
+  devServer: {
+    host: '0.0.0.0',
+    port: 3000
+  },
+  devtools: {
+    enabled: true
+  },
+
   app: {
     head: {
       title: '博客空间',
@@ -18,8 +27,18 @@ export default defineNuxtConfig({
         },
 
         {
-          name: 'keywords',
-          content: 'Nuxt3, Vue3, 前端, 博客'
+          property: 'og:title',
+          content: '博客空间'
+        },
+
+        {
+          property: 'og:description',
+          content: '前端开发者的梦境'
+        },
+
+        {
+          name: 'twitter:card',
+          content: 'summary_large_image'
         }
       ],
 
@@ -32,34 +51,42 @@ export default defineNuxtConfig({
       ]
     }
   },
-  ssr: true,
-  compatibilityDate: '2025-07-15',
-  devtools: { enabled: true },
-  devServer: {
-    host: '0.0.0.0',
-    port: 3000
-  },
-  alias: {
-    '@': rootDir,
-    '~': rootDir
-  },
+
   modules: [
     '@nuxtjs/tailwindcss',
     '@pinia/nuxt',
     'pinia-plugin-persistedstate/nuxt'
   ],
+
   build: {
     transpile: ['naive-ui', 'vueuc']
   },
+
   vite: {
+    ssr: {
+      noExternal: ['naive-ui', 'vueuc']
+    },
+
+    optimizeDeps: {
+      include: [
+        '@vicons/ionicons5',
+        'naive-ui',
+        'vueuc'
+      ]
+    },
+
     plugins: [
       Components({
+        dts: './components.d.ts',
+
+        dirs: ['components'],
+
         resolvers: [NaiveUiResolver()]
       }),
 
       AutoImport({
         imports: ['vue'],
-        dts: true
+        dts: './auto-imports.d.ts'
       })
     ]
   }

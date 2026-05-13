@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { NotificationsOutline } from '@vicons/ionicons5'
 import { NIcon } from 'naive-ui'
+import { NotificationsOutline } from '@vicons/ionicons5'
 </script>
 
 <template>
@@ -20,9 +20,7 @@ import { NIcon } from 'naive-ui'
     <div
         class="w-[56px] h-[56px] rounded-full bg-white flex items-center justify-center shadow-sm border border-[#EEF2F6]"
     >
-      <n-icon size="24">
-        <NotificationsOutline />
-      </n-icon>
+      <NotificationsOutline class="w-6 h-6" />
     </div>
 
     <!-- avatar -->
