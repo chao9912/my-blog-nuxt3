@@ -64,14 +64,21 @@ export default defineNuxtConfig({
 
   vite: {
     ssr: {
-      noExternal: ['naive-ui', 'vueuc']
+      noExternal: [
+        'naive-ui',
+        'vueuc',
+        'date-fns',
+        'date-fns-tz'
+      ]
     },
 
     optimizeDeps: {
       include: [
         '@vicons/ionicons5',
         'naive-ui',
-        'vueuc'
+        'vueuc',
+        'date-fns',
+        'date-fns-tz'
       ]
     },
 
