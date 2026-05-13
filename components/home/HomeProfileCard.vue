@@ -4,7 +4,7 @@
 
     <div class="mt-4 space-y-3.5 text-sm text-slate-700 lg:space-y-4 lg:text-base">
       <div class="flex items-start gap-3">
-        <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-600 text-xs">
+        <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs" :style="{ backgroundColor: 'var(--theme-color-100)', color: 'var(--theme-color-600)' }">
           👤
         </span>
         <div>
@@ -13,7 +13,7 @@
         </div>
       </div>
       <div class="flex items-start gap-3">
-        <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-pink-100 text-pink-600 text-xs">
+        <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs" :style="{ backgroundColor: 'var(--theme-color-100)', color: 'var(--theme-color-600)' }">
           👨
         </span>
         <div>
@@ -22,7 +22,7 @@
         </div>
       </div>
       <div class="flex items-start gap-3">
-        <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-pink-100 text-pink-600 text-xs">
+        <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs" :style="{ backgroundColor: 'var(--theme-color-100)', color: 'var(--theme-color-600)' }">
           👨
         </span>
         <div>
@@ -31,7 +31,7 @@
         </div>
       </div>
       <div class="flex items-start gap-3">
-        <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 text-xs">
+        <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs" :style="{ backgroundColor: 'var(--theme-color-100)', color: 'var(--theme-color-600)' }">
           💼
         </span>
         <div>
@@ -40,7 +40,7 @@
         </div>
       </div>
       <div class="flex items-start gap-3">
-        <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-orange-100 text-orange-600 text-xs">
+        <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs" :style="{ backgroundColor: 'var(--theme-color-100)', color: 'var(--theme-color-600)' }">
           📍
         </span>
         <div>
@@ -49,7 +49,7 @@
         </div>
       </div>
       <div class="flex items-start gap-3">
-        <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 text-red-600 text-xs">
+        <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs" :style="{ backgroundColor: 'var(--theme-color-100)', color: 'var(--theme-color-600)' }">
           📧
         </span>
         <div>
@@ -59,7 +59,7 @@
       </div>
     </div>
 
-    <button class="mt-5 h-10 w-full rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 text-sm font-medium text-white shadow-sm lg:mt-6 lg:h-11 lg:text-base">
+    <button class="mt-5 h-10 w-full rounded-xl text-sm font-medium text-white shadow-sm lg:mt-6 lg:h-11 lg:text-base" :style="{ background: `linear-gradient(135deg, var(--theme-color-500), var(--theme-color-600))` }">
       编辑资料
     </button>
   </section>

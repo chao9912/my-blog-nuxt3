@@ -1,3 +1,14 @@
 :root {
-    --theme-color: #3B82F6;
+    --theme-color: #3373EF;
+    --theme-color-10: color-mix(in srgb, var(--theme-color) 1%, white);
+    --theme-color-50: color-mix(in srgb, var(--theme-color) 8%, white);
+    --theme-color-100: color-mix(in srgb, var(--theme-color) 12%, white);
+    --theme-color-200: color-mix(in srgb, var(--theme-color) 25%, white);
+    --theme-color-300: color-mix(in srgb, var(--theme-color) 40%, white);
+    --theme-color-400: color-mix(in srgb, var(--theme-color) 55%, white);
+    --theme-color-500: var(--theme-color);
+    --theme-color-600: color-mix(in srgb, var(--theme-color) 85%, black);
+    --theme-color-700: color-mix(in srgb, var(--theme-color) 70%, black);
+    --theme-color-800: color-mix(in srgb, var(--theme-color) 55%, black);
+    --theme-color-900: color-mix(in srgb, var(--theme-color) 40%, black);
 }

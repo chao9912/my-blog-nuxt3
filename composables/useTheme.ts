@@ -1,5 +1,5 @@
 export const themeMap: Record<string, string> = {
-    '/': '#1883F5',
+    '/': '#3373EF',
     '/moments': '#13ABB9',
     '/diary': '#42AD60',
     '/work': '#FD7501'
