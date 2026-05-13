@@ -18,8 +18,16 @@ model Article {
 
 model Moment {
   id          Int      @id @default(autoincrement())
-  content     String
-  images      Json
+  title       String
+  desc        String
+  cover       String
+  tag         String
+  date        String
+  likes       Int
+  comments    Int
+  views       Int
+  isVideo     Boolean  @default(false)
+  duration    String?
   createTime  DateTime @default(now())
 }
 

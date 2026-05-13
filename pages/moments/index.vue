@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
 import { fetchMomentList } from '@/composables/momentsApi'
 import MomentFilter from '@/components/moment/MomentFilter.vue'
 import MomentToolbar from '@/components/moment/MomentToolbar.vue'
@@ -72,7 +71,7 @@ onMounted(() => {
         <div class="absolute -left-20 top-0 h-60 w-60 rounded-full bg-[#22C7D6]/20 blur-3xl"></div>
         <div class="absolute right-0 top-0 h-40 w-40 rounded-full bg-[#287FFD]/10 blur-3xl"></div>
       </div>
-      
+
       <div class="relative z-10 flex items-center gap-6">
         <div class="relative">
           <div class="absolute -inset-3 rounded-full bg-gradient-to-br from-[#22C7D6]/30 to-[#287FFD]/30 blur-xl"></div>
@@ -83,12 +82,12 @@ onMounted(() => {
             </svg>
           </div>
         </div>
-        
+
         <div>
           <h1 class="text-2xl font-bold text-gray-900 lg:text-3xl">小辫子（精彩瞬间）</h1>
           <p class="text-sm text-gray-500 lg:text-base mt-1">定格美好瞬间，记录闪光时刻</p>
         </div>
-        
+
         <button class="ml-auto flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#22C7D6] to-[#287FFD] text-white font-medium rounded-xl shadow-lg shadow-[#22C7D6]/30 hover:shadow-xl hover:shadow-[#22C7D6]/40 transition-all duration-200">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-5 h-5">
             <line x1="12" y1="5" x2="12" y2="19"/>
@@ -98,16 +97,16 @@ onMounted(() => {
         </button>
       </div>
     </section>
-    
+
     <div class="px-6 py-5 lg:px-10 lg:py-6">
       <div class="flex items-center justify-between mb-5">
         <MomentFilter />
         <MomentToolbar />
       </div>
-      
+
       <AppLoading v-if="loading" />
       <MomentGrid v-else :moments="moments" />
-      
+
       <div v-if="!loading && totalPages > 1" class="flex items-center justify-center mt-8">
         <div class="flex items-center gap-2">
           <button
@@ -119,7 +118,7 @@ onMounted(() => {
               <path d="M15 19l-7-7 7-7"/>
             </svg>
           </button>
-          
+
           <template v-if="totalPages <= 5">
             <button
               v-for="pageNum in totalPages"
@@ -133,7 +132,7 @@ onMounted(() => {
               {{ pageNum }}
             </button>
           </template>
-          
+
           <template v-else>
             <button
               @click="goToPage(1)"
@@ -144,9 +143,9 @@ onMounted(() => {
             >
               1
             </button>
-            
+
             <span v-if="page > 3" class="w-10 h-10 flex items-center justify-center text-gray-400">...</span>
-            
+
             <button
               v-if="page > 2"
               @click="goToPage(page - 1)"
@@ -154,13 +153,13 @@ onMounted(() => {
             >
               {{ page - 1 }}
             </button>
-            
+
             <button
               class="w-10 h-10 rounded-xl font-medium bg-gradient-to-r from-[#22C7D6] to-[#287FFD] text-white shadow-lg shadow-[#22C7D6]/30"
             >
               {{ page }}
             </button>
-            
+
             <button
               v-if="page < totalPages - 1"
               @click="goToPage(page + 1)"
@@ -168,9 +167,9 @@ onMounted(() => {
             >
               {{ page + 1 }}
             </button>
-            
+
             <span v-if="page < totalPages - 2" class="w-10 h-10 flex items-center justify-center text-gray-400">...</span>
-            
+
             <button
               @click="goToPage(totalPages)"
               class="w-10 h-10 rounded-xl font-medium transition-all duration-200"
@@ -181,7 +180,7 @@ onMounted(() => {
               {{ totalPages }}
             </button>
           </template>
-          
+
           <button
             @click="nextPage"
             :disabled="page === totalPages"
