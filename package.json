@@ -8,10 +8,16 @@
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
+    "prismaDev": "nuxt dev prisma:sync",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "seed": "prisma db seed"
+    "prisma:push": "pnpm prisma db push",
+    "prisma:gen": "pnpm prisma generate",
+    "prisma:sync": "pnpm prisma db push && pnpm prisma generate",
+    "prisma:studio": "pnpm prisma studio",
+    "prisma:migrate": "pnpm prisma migrate dev",
+    "seed": "pnpm prisma db seed"
   },
   "dependencies": {
     "@pinia/nuxt": "^0.11.3",
