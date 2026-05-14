@@ -63,7 +63,7 @@ const mediaUrlsList = computed<MediaItem[]>(() => {
           class="w-full h-[200px]">
         <img class="object-cover" v-for="item in mediaUrlsList" :key="item.vKey" :src="item.url" alt="图片">
       </n-carousel>
-      <n-image  v-else width="100%"   class="w-full h-[200px] object-cover group-hover:scale-105 transition-transform duration-500" :src="cover" alt="图片"/>
+      <n-image  v-else width="100%" lazy   class="w-full h-[200px] object-cover group-hover:scale-105 transition-transform duration-500" :src="cover" alt="图片"/>
       <div v-if="isVideo && duration" class="absolute bottom-3 right-3 px-2.5 py-1 bg-black/70 rounded-lg text-white text-xs font-medium">
         {{ duration }}
       </div>
