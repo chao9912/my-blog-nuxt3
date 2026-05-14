@@ -7,32 +7,80 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+/// 文章表
 model Article {
+  /// 文章ID，自增主键
   id          Int      @id @default(autoincrement())
+  /// 文章标题
   title       String
+  /// 文章描述
   desc        String?
+  /// 文章内容
   content     String
+  /// 文章封面图片地址
   cover       String?
+  /// 创建时间
   createTime  DateTime @default(now())
 }
 
+/// 动态/时刻表
 model Moment {
+  /// 动态ID，自增主键
   id          Int      @id @default(autoincrement())
+  /// 动态标题
   title       String
+  /// 动态描述
   desc        String
+  /// 封面图片地址
   cover       String
+  /// 标签
   tag         String
+  /// 日期（显示用）
   date        String
+  /// 点赞数
   likes       Int
+  /// 评论数
   comments    Int
+  /// 浏览量
   views       Int
+  /// 是否视频类型
   isVideo     Boolean  @default(false)
+  /// 视频时长
   duration    String?
+  /// 分类（all:全部, photo:照片, video:视频, mixed:图文）
+  category    String   @default("all")
+  /// 媒体地址，多个用逗号分隔
+  mediaUrls   String 
+  /// 创建时间
   createTime  DateTime @default(now())
 }
 
+/// 用户表
 model User {
+  /// 用户ID，自增主键
   id          Int      @id @default(autoincrement())
+  /// 用户名，唯一，用于登录
   username    String   @unique
+  /// 密码（加密存储）
   password    String
+  /// 昵称/个人昵称
+  nickname    String
+  /// 性别（male:男, female:女, other:其他）
+  gender      String   @default("other")
+  /// 职业
+  occupation  String?
+  /// 所在地
+  location    String?
+  /// 邮箱
+  email       String?  @unique
+  /// 头像地址
+  avatar      String?
+  /// 个人简介/签名
+  bio         String?
+  /// 个人标签，多个用逗号分隔
+  tags        String?
+  /// 创建时间
+  createTime  DateTime @default(now())
+  /// 更新时间
+  updateTime  DateTime @updatedAt
 }

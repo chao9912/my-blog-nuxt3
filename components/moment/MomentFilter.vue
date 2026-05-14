@@ -6,7 +6,6 @@ const filters = [
   {key: 'photo', label: '照片'},
   {key: 'video', label: '视频'},
   {key: 'mixed', label: '图文'},
-  {key: 'favorite', label: '收藏'}
 ]
 
 function setFilter(key: string) {
