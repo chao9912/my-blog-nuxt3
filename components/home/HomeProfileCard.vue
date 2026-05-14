@@ -56,28 +56,28 @@
     </div>
 
     <!-- 按钮 -->
-    <button
-        class="mt-5 flex h-10 w-full items-center justify-center gap-2 rounded-xl text-sm font-medium text-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md lg:mt-6 lg:h-11"
-        :style="{
-        background: `linear-gradient(135deg, var(--theme-color-500), var(--theme-color-600))`
-      }"
-    >
-      <span>编辑资料</span>
+<!--    <button-->
+<!--        class="mt-5 flex h-10 w-full items-center justify-center gap-2 rounded-xl text-sm font-medium text-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md lg:mt-6 lg:h-11"-->
+<!--        :style="{-->
+<!--        background: `linear-gradient(135deg, var(&#45;&#45;theme-color-500), var(&#45;&#45;theme-color-600))`-->
+<!--      }"-->
+<!--    >-->
+<!--      <span>编辑资料</span>-->
 
-      <svg
-          class="h-4 w-4"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          viewBox="0 0 24 24"
-      >
-        <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M11 5h2m-1-1v2m-7 9v4h4l9-9a2.121 2.121 0 00-3-3l-9 9z"
-        />
-      </svg>
-    </button>
+<!--      <svg-->
+<!--          class="h-4 w-4"-->
+<!--          fill="none"-->
+<!--          stroke="currentColor"-->
+<!--          stroke-width="2"-->
+<!--          viewBox="0 0 24 24"-->
+<!--      >-->
+<!--        <path-->
+<!--            stroke-linecap="round"-->
+<!--            stroke-linejoin="round"-->
+<!--            d="M11 5h2m-1-1v2m-7 9v4h4l9-9a2.121 2.121 0 00-3-3l-9 9z"-->
+<!--        />-->
+<!--      </svg>-->
+<!--    </button>-->
   </section>
 </template>
 
@@ -94,11 +94,6 @@ const infoList = [
     icon: '✨'
   },
   {
-    label: '性别',
-    value: '男',
-    icon: '🧑'
-  },
-  {
     label: '职业',
     value: '前端开发工程师',
     icon: '💻'
@@ -107,11 +102,6 @@ const infoList = [
     label: '所在地',
     value: '上海',
     icon: '📍'
-  },
-  {
-    label: '邮箱',
-    value: 'xiaobianzi@example.com',
-    icon: '📧'
   }
 ]
 </script>
