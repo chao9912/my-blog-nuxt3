@@ -41,9 +41,6 @@ importers:
       motion-v:
         specifier: ^2.2.1
         version: 2.2.1(@vueuse/core@14.3.0(vue@3.5.34(typescript@6.0.3)))(vue@3.5.34(typescript@6.0.3))
-      naive-ui:
-        specifier: ^2.44.1
-        version: 2.44.1(vue@3.5.34(typescript@6.0.3))
       nuxt:
         specifier: ^4.4.5
         version: 4.4.5(@babel/core@7.29.0)(@babel/plugin-syntax-jsx@7.28.6(@babel/core@7.29.0))(@parcel/watcher@2.5.6)(@types/node@25.7.0)(@vue/compiler-sfc@3.5.34)(cac@6.7.14)(db0@0.3.4)(ioredis@5.10.1)(magicast@0.5.2)(pinia@3.0.4(typescript@6.0.3)(vue@3.5.34(typescript@6.0.3)))(rollup-plugin-visualizer@7.0.1(rollup@4.60.3))(rollup@4.60.3)(srvx@0.11.15)(terser@5.47.1)(typescript@6.0.3)(vite@7.3.3(@types/node@25.7.0)(jiti@2.7.0)(terser@5.47.1)(yaml@2.9.0))(yaml@2.9.0)
@@ -66,6 +63,9 @@ importers:
         specifier: 0.4.64
         version: 0.4.64(vue@3.5.34(typescript@6.0.3))
     devDependencies:
+      '@css-render/vue3-ssr':
+        specifier: ^0.15.14
+        version: 0.15.14(vue@3.5.34(typescript@6.0.3))
       '@nuxtjs/tailwindcss':
         specifier: ^6.14.0
         version: 6.14.0(magicast@0.5.2)(yaml@2.9.0)
@@ -87,6 +87,15 @@ importers:
       autoprefixer:
         specifier: ^10.5.0
         version: 10.5.0(postcss@8.5.14)
+      css-render:
+        specifier: ^0.15.14
+        version: 0.15.14
+      naive-ui:
+        specifier: ^2.44.1
+        version: 2.44.1(vue@3.5.34(typescript@6.0.3))
+      nuxtjs-naive-ui:
+        specifier: ^1.0.2
+        version: 1.0.2(magicast@0.5.2)(vue@3.5.34(typescript@6.0.3))
       postcss:
         specifier: ^8.5.14
         version: 8.5.14
@@ -3414,6 +3423,9 @@ packages:
         optional: true
       '@types/node':
         optional: true
+
+  nuxtjs-naive-ui@1.0.2:
+    resolution: {integrity: sha512-qJ5ZKTEQieNaSNJFHdRCCz9SOLRB7Rg0vwzFJe64WYKt+SzDM2sQ7ZXj2raJzyIPBtKInQv6yDo2vvSBsLiUHA==}
 
   nypm@0.6.6:
     resolution: {integrity: sha512-vRyr0r4cbBapw07Xw8xrj9Teq3o7MUD35rSaTcanDbW+aK2XHDgJFiU6ZTj2GBw7Q12ysdsyFss+Vdz4hQ0Y6Q==}
@@ -8397,6 +8409,14 @@ snapshots:
       - vue-tsc
       - xml2js
       - yaml
+
+  nuxtjs-naive-ui@1.0.2(magicast@0.5.2)(vue@3.5.34(typescript@6.0.3)):
+    dependencies:
+      '@css-render/vue3-ssr': 0.15.14(vue@3.5.34(typescript@6.0.3))
+      '@nuxt/kit': 3.21.5(magicast@0.5.2)
+    transitivePeerDependencies:
+      - magicast
+      - vue
 
   nypm@0.6.6:
     dependencies:

@@ -1,21 +1,6 @@
 <script setup lang="ts">
 import { fetchMomentList } from '@/composables/momentsApi'
-interface MomentItem {
-  id: number
-  title: string
-  desc: string
-  cover: string
-  tag: string
-  date: string
-  likes: number
-  comments: number
-  views: number
-  isVideo?: boolean
-  duration?: string
-  category: string
-  mediaUrls?: string
-  createTime?: string
-}
+
 
 const page = ref(1)
 const pageSize = 8
@@ -94,7 +79,6 @@ function updatePage(newPage: number) {
         </svg>
         <p class="mt-4 text-gray-500">暂无动态数据</p>
       </div>
-      <client-only>
       <div v-if="!loading&&isPage" class="flex items-center justify-center mt-8">
         <n-pagination v-model:page="page"
                       :item-count="total"
@@ -102,7 +86,6 @@ function updatePage(newPage: number) {
                       size="large"
                       :on-update:page="updatePage"/>
       </div>
-      </client-only>
     </div>
   </div>
 </template>

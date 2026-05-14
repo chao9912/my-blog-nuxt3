@@ -55,13 +55,14 @@ export default defineNuxtConfig({
     css: ['~/assets/css/main.css'],
 
     modules: [
+        'nuxtjs-naive-ui', // 启用官方模块
         '@nuxtjs/tailwindcss',
         '@pinia/nuxt',
         'pinia-plugin-persistedstate/nuxt'
     ],
 
     build: {
-        transpile: ['naive-ui', 'vueuc']
+        transpile: ['naive-ui', 'vueuc', '@css-render/vue3-ssr', '@css-render/core']
     },
 
     vite: {
@@ -70,10 +71,11 @@ export default defineNuxtConfig({
                 'naive-ui',
                 'vueuc',
                 'date-fns',
-                'date-fns-tz'
+                'date-fns-tz',
+                '@css-render/core',
+                '@css-render/vue3-ssr'
             ]
         },
-
         optimizeDeps: {
             include: [
                 '@vicons/ionicons5',
