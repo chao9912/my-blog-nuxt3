@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref, computed } from 'vue'
 import { fetchMomentList } from '@/composables/momentsApi'
 import MomentFilter from '@/components/moment/MomentFilter.vue'
 import MomentToolbar from '@/components/moment/MomentToolbar.vue'
@@ -22,35 +23,20 @@ interface MomentItem {
   createTime?: string
 }
 
-const moments = ref<MomentItem[]>([])
 const page = ref(1)
-const total = ref(0)
-const loading = ref(false)
 const pageSize = 8
 
-async function loadMomentList() {
-  loading.value = true
-  try {
-    const currentPage: number = page.value || 1
-    const result = await fetchMomentList(currentPage, pageSize)
-    moments.value = result.list
-    page.value = result.page
-    total.value = result.total
-  } catch (error) {
-    console.error('Failed to fetch moments:', error)
-  } finally {
-    loading.value = false
-  }
-}
+const { data: momentData, pending: loading } = useAsyncData(
+  () => `moment-list-${page.value}`,
+  () => fetchMomentList(page.value, pageSize)
+)
 
-function updatePage(e:number) {
-  page.value = e
-  loadMomentList()
-}
+const moments = computed(() => momentData.value?.list || [])
+const total = computed(() => momentData.value?.total || 0)
 
-onMounted(() => {
-  loadMomentList()
-})
+function updatePage(newPage: number) {
+  page.value = newPage
+}
 </script>
 
 <template>
@@ -95,13 +81,14 @@ onMounted(() => {
 
       <AppLoading v-if="loading" />
       <MomentGrid v-else :moments="moments" />
-
+      <client-only>
       <div v-if="!loading&&total > 0" class="flex items-center justify-center mt-8">
         <n-pagination v-model:page="page"
                       :item-count="total"
                       size="large"
                       :on-update:page="updatePage"/>
       </div>
+      </client-only>
     </div>
   </div>
 </template>
