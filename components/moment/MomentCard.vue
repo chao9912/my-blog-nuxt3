@@ -30,7 +30,7 @@ const mediaUrlsList = computed<MediaItem[]>(() => {
   }
   
   if (props.category === 'photo' || props.category === 'mixed') {
-    return props.mediaUrls
+    return `${props.cover},${props.mediaUrls}`
       .split(',')
       .map((url, index) => ({
         vKey: `${props.id}-${index+(new Date().getTime())}`,
@@ -56,10 +56,10 @@ const mediaUrlsList = computed<MediaItem[]>(() => {
   <div class="bg-white rounded-[12px] overflow-hidden border border-gray-100 hover:shadow-xl hover:shadow-gray-200/50 transition-all duration-300 group cursor-pointer">
     <div class="relative overflow-hidden">
       <n-carousel
+          autoplay
           v-if="category==='photo'"
           direction="vertical"
           dot-placement="right"
-          show-arrow
           class="w-full h-[200px]">
         <img class="object-cover" v-for="item in mediaUrlsList" :key="item.vKey" :src="item.url" alt="图片">
       </n-carousel>

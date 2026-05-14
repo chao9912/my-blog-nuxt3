@@ -40,6 +40,7 @@ const isPage = computed(() => {
 function updatePage(newPage: number) {
   page.value = newPage
 }
+
 </script>
 
 <template>
