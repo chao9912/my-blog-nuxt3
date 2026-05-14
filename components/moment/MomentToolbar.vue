@@ -3,7 +3,6 @@ import { ref } from 'vue'
 
 const viewMode = ref('grid')
 const selectedTime = ref('all')
-const selectedCategory = ref('all')
 
 const timeOptions = [
     {
@@ -23,32 +22,6 @@ const timeOptions = [
       value: 'quarter'
     }
 ]
-const categoryOptions = [
-    {
-      label: '全部分类',
-      value: 'all'
-    },
-    {
-      label: '视频',
-      value: 'video'
-    },
-    {
-      label: '图片',
-      value: 'image'
-    },
-    {
-      label: '文档',
-      value: 'document'
-    },
-    {
-      label: '音乐',
-      value: 'music'
-    },
-    {
-      label: '其他',
-      value: 'other'
-    }
-]
 
 function toggleView() {
   viewMode.value = viewMode.value === 'grid' ? 'list' : 'grid'
@@ -59,7 +32,6 @@ function toggleView() {
   <div class="flex items-center justify-between">
     <div class="flex items-center gap-3">
       <ClientSelect v-model="selectedTime" :options="timeOptions"  class="w-40"/>
-      <ClientSelect v-model="selectedCategory" :options="categoryOptions"  class="w-40"/>
     </div>
   </div>
 </template>

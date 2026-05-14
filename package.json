@@ -8,7 +8,6 @@
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
-    "prismaDev": "nuxt dev prisma:sync",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
