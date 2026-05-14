@@ -23,9 +23,5 @@
 </template>
 
 <script setup lang="ts">
-import HomeBanner from '@/components/home/HomeBanner.vue'
-import HomeFeatureGrid from '@/components/home/HomeFeatureGrid.vue'
-import HomeProfileCard from '@/components/home/HomeProfileCard.vue'
-import HomeTagCard from '@/components/home/HomeTagCard.vue'
-import HomeIntroCard from '@/components/home/HomeIntroCard.vue'
+
 </script>

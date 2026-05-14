@@ -1,5 +1,14 @@
 <script setup lang="ts">
-defineProps<{
+import { computed } from 'vue'
+
+interface MediaItem {
+  vKey: string
+  name: string
+  url: string
+}
+
+const props = defineProps<{
+  id:number,
   title: string
   desc: string
   cover: string
@@ -10,13 +19,52 @@ defineProps<{
   views: number
   isVideo?: boolean
   duration?: string
+  category: string
+  mediaUrls?: string
+  createTime?: string
 }>()
+
+const mediaUrlsList = computed<MediaItem[]>(() => {
+  if (!props.mediaUrls) {
+    return []
+  }
+  
+  if (props.category === 'photo' || props.category === 'mixed') {
+    return props.mediaUrls
+      .split(',')
+      .map((url, index) => ({
+        vKey: `${props.id}-${index+(new Date().getTime())}`,
+        name: props.title,
+        url: url.trim()
+      }))
+      .filter(item => item.url)
+  }
+  
+  if (props.category === 'video') {
+    return [{
+      vKey: props.title,
+      name: props.title,
+      url: props.mediaUrls
+    }]
+  }
+  
+  return []
+})
 </script>
 
 <template>
   <div class="bg-white rounded-[12px] overflow-hidden border border-gray-100 hover:shadow-xl hover:shadow-gray-200/50 transition-all duration-300 group cursor-pointer">
     <div class="relative overflow-hidden">
-      <img
+      <n-carousel
+          v-if="category==='photo'"
+          direction="vertical"
+          dot-placement="right"
+          show-arrow
+          class="w-full h-[200px]">
+        <img class="object-cover" v-for="item in mediaUrlsList" :key="item.vKey" :src="item.url" alt="图片">
+      </n-carousel>
+      <img alt="封面"
+           v-else
         :src="cover"
         class="w-full h-[200px] object-cover group-hover:scale-105 transition-transform duration-500"
       />

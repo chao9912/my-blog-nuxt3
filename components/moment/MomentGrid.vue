@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import MomentCard from './MomentCard.vue'
-
 interface Moment {
   id: number
   title: string
@@ -13,6 +11,9 @@ interface Moment {
   views: number
   isVideo?: boolean
   duration?: string
+  category: string
+  mediaUrls?: string
+  createTime?: string
 }
 
 defineProps<{
@@ -25,6 +26,7 @@ defineProps<{
     <MomentCard
       v-for="moment in moments"
       :key="moment.id"
+      :id="moment.id"
       :title="moment.title"
       :desc="moment.desc"
       :cover="moment.cover"
@@ -35,6 +37,9 @@ defineProps<{
       :views="moment.views"
       :is-video="moment.isVideo"
       :duration="moment.duration"
+      :category="moment.category"
+      :mediaUrls="moment.mediaUrls"
+      :createTime="moment.createTime"
     />
   </div>
 </template>

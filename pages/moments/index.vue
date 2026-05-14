@@ -1,11 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
 import { fetchMomentList } from '@/composables/momentsApi'
-import MomentFilter from '@/components/moment/MomentFilter.vue'
-import MomentToolbar from '@/components/moment/MomentToolbar.vue'
-import MomentGrid from '@/components/moment/MomentGrid.vue'
-import AppLoading from '@/components/common/AppLoading.vue'
-
 interface MomentItem {
   id: number
   title: string
@@ -25,15 +19,23 @@ interface MomentItem {
 
 const page = ref(1)
 const pageSize = 8
+const category = ref('all')
+
+watch(category, () => {
+  page.value = 1
+})
 
 const { data: momentData, pending: loading } = useAsyncData(
-  () => `moment-list-${page.value}`,
-  () => fetchMomentList(page.value, pageSize)
+  () => `moment-list-${page.value}-${category.value}`,
+  () => fetchMomentList(page.value, pageSize, category.value)
 )
 
-console.log(loading.value);
 const moments = computed(() => momentData.value?.list || [])
 const total = computed(() => momentData.value?.total || 0)
+
+const isPage = computed(() => {
+  return total.value > pageSize
+})
 
 function updatePage(newPage: number) {
   page.value = newPage
@@ -76,7 +78,7 @@ function updatePage(newPage: number) {
 
     <div class="px-6 py-5 lg:px-10 lg:py-6">
       <div class="flex items-center justify-between ">
-        <MomentFilter />
+        <MomentFilter v-model="category" />
         <MomentToolbar />
       </div>
 
@@ -92,9 +94,10 @@ function updatePage(newPage: number) {
         <p class="mt-4 text-gray-500">暂无动态数据</p>
       </div>
       <client-only>
-      <div v-if="!loading&&total > 0" class="flex items-center justify-center mt-8">
+      <div v-if="!loading&&isPage" class="flex items-center justify-center mt-8">
         <n-pagination v-model:page="page"
                       :item-count="total"
+                      :page-size="pageSize"
                       size="large"
                       :on-update:page="updatePage"/>
       </div>

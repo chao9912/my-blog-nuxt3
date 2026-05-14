@@ -42,6 +42,7 @@ declare module 'vue' {
     MomentToolbar: typeof import('./components/moment/MomentToolbar.vue')['default']
     MomentVideoCard: typeof import('./components/moment/MomentVideoCard.vue')['default']
     NButton: typeof import('naive-ui')['NButton']
+    NCarousel: typeof import('naive-ui')['NCarousel']
     NConfigProvider: typeof import('naive-ui')['NConfigProvider']
     NForm: typeof import('naive-ui')['NForm']
     NFormItem: typeof import('naive-ui')['NFormItem']

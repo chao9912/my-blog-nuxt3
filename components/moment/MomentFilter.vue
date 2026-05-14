@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const activeFilter = ref('all')
+const modelValue = defineModel<string>({ default: 'all' })
 
 const filters = [
   {key: 'all', label: '全部'},
@@ -7,16 +7,12 @@ const filters = [
   {key: 'video', label: '视频'},
   {key: 'mixed', label: '图文'},
 ]
-
-function setFilter(key: string) {
-  activeFilter.value = key
-}
 </script>
 
 <template>
   <div class="flex items-center gap-1">
     <client-only>
-      <n-tabs :default-value="activeFilter" animated size="large">
+      <n-tabs v-model:value="modelValue" animated size="large">
         <n-tab-pane :name="item.key" :tab=" item.label" v-for="item in filters" :key="item.key"></n-tab-pane>
       </n-tabs>
     </client-only>
