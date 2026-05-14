@@ -31,6 +31,7 @@ const { data: momentData, pending: loading } = useAsyncData(
   () => fetchMomentList(page.value, pageSize)
 )
 
+console.log(loading.value);
 const moments = computed(() => momentData.value?.list || [])
 const total = computed(() => momentData.value?.total || 0)
 
@@ -80,7 +81,16 @@ function updatePage(newPage: number) {
       </div>
 
       <AppLoading v-if="loading" />
-      <MomentGrid v-else :moments="moments" />
+      <Transition name="fade-slide">
+        <MomentGrid v-if="!loading && moments.length > 0" :moments="moments" />
+      </Transition>
+      <div v-if="!loading && moments.length === 0" class="text-center py-12">
+        <svg class="w-16 h-16 mx-auto text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+          <circle cx="12" cy="13" r="4"/>
+        </svg>
+        <p class="mt-4 text-gray-500">暂无动态数据</p>
+      </div>
       <client-only>
       <div v-if="!loading&&total > 0" class="flex items-center justify-center mt-8">
         <n-pagination v-model:page="page"
@@ -96,5 +106,23 @@ function updatePage(newPage: number) {
 <style scoped>
 .banner-cu {
   border-radius: 12px 12px 0 0;
+}
+
+.fade-slide-enter-active {
+  transition: all 0.5s ease-out;
+}
+
+.fade-slide-leave-active {
+  transition: all 0.3s ease-in;
+}
+
+.fade-slide-enter-from {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.fade-slide-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
 }
 </style>

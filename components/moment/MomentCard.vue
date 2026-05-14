@@ -41,7 +41,7 @@ defineProps<{
         {{ desc }}
       </p>
       
-      <div class="inline-flex px-3 py-1 rounded-lg bg-[#E8F9FA] text-[#22C7D6] text-xs font-medium mb-4">
+      <div class="inline-flex px-3 py-1 rounded-lg bg-[var(--theme-color-50)] text-[var(--theme-color)] text-xs font-medium mb-4">
         {{ tag }}
       </div>
       
