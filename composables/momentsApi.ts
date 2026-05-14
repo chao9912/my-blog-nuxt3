@@ -10,6 +10,9 @@ interface MomentItem {
   views: number
   isVideo?: boolean
   duration?: string
+  category: string
+  mediaUrls: string
+  createTime: string
 }
 
 interface MomentListResponse {
@@ -30,7 +33,10 @@ const mockMoments: MomentItem[] = [
     date: '2024-05-20',
     likes: 28,
     comments: 6,
-    views: 120
+    views: 120,
+    category: 'photo',
+    mediaUrls: 'https://picsum.photos/seed/moment1-1/800/600,https://picsum.photos/seed/moment1-2/800/600',
+    createTime: '2024-05-20T10:30:00Z'
   },
   {
     id: 2,
@@ -41,7 +47,10 @@ const mockMoments: MomentItem[] = [
     date: '2024-05-18',
     likes: 31,
     comments: 9,
-    views: 98
+    views: 98,
+    category: 'photo',
+    mediaUrls: 'https://picsum.photos/seed/moment2-1/800/600',
+    createTime: '2024-05-18T14:20:00Z'
   },
   {
     id: 3,
@@ -54,7 +63,10 @@ const mockMoments: MomentItem[] = [
     comments: 11,
     views: 156,
     isVideo: true,
-    duration: '00:45'
+    duration: '00:45',
+    category: 'video',
+    mediaUrls: 'https://example.com/video/moment3.mp4',
+    createTime: '2024-05-15T18:45:00Z'
   },
   {
     id: 4,
@@ -65,7 +77,10 @@ const mockMoments: MomentItem[] = [
     date: '2024-05-12',
     likes: 26,
     comments: 7,
-    views: 89
+    views: 89,
+    category: 'mixed',
+    mediaUrls: 'https://picsum.photos/seed/moment4-1/800/600,https://picsum.photos/seed/moment4-2/800/600,https://picsum.photos/seed/moment4-3/800/600',
+    createTime: '2024-05-12T19:30:00Z'
   },
   {
     id: 5,
@@ -76,7 +91,10 @@ const mockMoments: MomentItem[] = [
     date: '2024-05-10',
     likes: 35,
     comments: 8,
-    views: 112
+    views: 112,
+    category: 'photo',
+    mediaUrls: 'https://picsum.photos/seed/moment5-1/800/600',
+    createTime: '2024-05-10T17:50:00Z'
   },
   {
     id: 6,
@@ -89,7 +107,10 @@ const mockMoments: MomentItem[] = [
     comments: 12,
     views: 145,
     isVideo: true,
-    duration: '00:32'
+    duration: '00:32',
+    category: 'video',
+    mediaUrls: 'https://example.com/video/moment6.mp4',
+    createTime: '2024-05-08T15:20:00Z'
   },
   {
     id: 7,
@@ -100,7 +121,10 @@ const mockMoments: MomentItem[] = [
     date: '2024-05-05',
     likes: 44,
     comments: 14,
-    views: 167
+    views: 167,
+    category: 'mixed',
+    mediaUrls: 'https://picsum.photos/seed/moment7-1/800/600,https://picsum.photos/seed/moment7-2/800/600,https://example.com/video/moment7.mp4',
+    createTime: '2024-05-05T22:00:00Z'
   },
   {
     id: 8,
@@ -111,7 +135,10 @@ const mockMoments: MomentItem[] = [
     date: '2024-05-03',
     likes: 29,
     comments: 5,
-    views: 78
+    views: 78,
+    category: 'photo',
+    mediaUrls: 'https://picsum.photos/seed/moment8-1/800/600',
+    createTime: '2024-05-03T18:30:00Z'
   },
   {
     id: 9,
@@ -122,7 +149,10 @@ const mockMoments: MomentItem[] = [
     date: '2024-04-28',
     likes: 52,
     comments: 18,
-    views: 234
+    views: 234,
+    category: 'photo',
+    mediaUrls: 'https://picsum.photos/seed/moment9-1/800/600,https://picsum.photos/seed/moment9-2/800/600,https://picsum.photos/seed/moment9-3/800/600,https://picsum.photos/seed/moment9-4/800/600',
+    createTime: '2024-04-28T09:15:00Z'
   },
   {
     id: 10,
@@ -135,7 +165,10 @@ const mockMoments: MomentItem[] = [
     comments: 10,
     views: 145,
     isVideo: true,
-    duration: '02:15'
+    duration: '02:15',
+    category: 'video',
+    mediaUrls: 'https://example.com/video/moment10.mp4',
+    createTime: '2024-04-25T06:30:00Z'
   },
   {
     id: 11,
@@ -146,7 +179,10 @@ const mockMoments: MomentItem[] = [
     date: '2024-04-20',
     likes: 47,
     comments: 15,
-    views: 189
+    views: 189,
+    category: 'photo',
+    mediaUrls: 'https://picsum.photos/seed/moment11-1/800/600,https://picsum.photos/seed/moment11-2/800/600',
+    createTime: '2024-04-20T15:00:00Z'
   },
   {
     id: 12,
@@ -157,7 +193,10 @@ const mockMoments: MomentItem[] = [
     date: '2024-04-18',
     likes: 61,
     comments: 22,
-    views: 312
+    views: 312,
+    category: 'all',
+    mediaUrls: 'https://picsum.photos/seed/moment12-1/800/600',
+    createTime: '2024-04-18T20:00:00Z'
   }
 ]
 

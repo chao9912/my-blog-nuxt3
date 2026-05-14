@@ -17,23 +17,25 @@ interface MomentItem {
   views: number
   isVideo?: boolean
   duration?: string
+  category: string
+  mediaUrls?: string
+  createTime?: string
 }
 
 const moments = ref<MomentItem[]>([])
 const page = ref(1)
 const total = ref(0)
-const totalPages = ref(0)
 const loading = ref(false)
 const pageSize = 8
 
-async function loadMomentList(currentPage: number) {
+async function loadMomentList() {
   loading.value = true
   try {
+    const currentPage: number = page.value || 1
     const result = await fetchMomentList(currentPage, pageSize)
     moments.value = result.list
     page.value = result.page
     total.value = result.total
-    totalPages.value = result.totalPages
   } catch (error) {
     console.error('Failed to fetch moments:', error)
   } finally {
@@ -41,26 +43,13 @@ async function loadMomentList(currentPage: number) {
   }
 }
 
-function prevPage() {
-  if (page.value > 1) {
-    loadMomentList(page.value - 1)
-  }
-}
-
-function nextPage() {
-  if (page.value < totalPages.value) {
-    loadMomentList(page.value + 1)
-  }
-}
-
-function goToPage(targetPage: number) {
-  if (targetPage >= 1 && targetPage <= totalPages.value) {
-    loadMomentList(targetPage)
-  }
+function updatePage(e:number) {
+  page.value = e
+  loadMomentList()
 }
 
 onMounted(() => {
-  loadMomentList(1)
+  loadMomentList()
 })
 </script>
 
@@ -107,94 +96,98 @@ onMounted(() => {
       <AppLoading v-if="loading" />
       <MomentGrid v-else :moments="moments" />
 
-      <div v-if="!loading && totalPages > 1" class="flex items-center justify-center mt-8">
-        <div class="flex items-center gap-2">
-          <button
-            @click="prevPage"
-            :disabled="page === 1"
-            class="w-10 h-10 rounded-xl border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-50 hover:border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
-          >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-5 h-5">
-              <path d="M15 19l-7-7 7-7"/>
-            </svg>
-          </button>
+      <div v-if="!loading" class="flex items-center justify-center mt-8">
+        <n-pagination v-model:page="page"
+                      :item-count="total"
+                      size="large"
+                      :on-update:page="updatePage"/>
+<!--        <div class="flex items-center gap-2">-->
+<!--          <button-->
+<!--            @click="prevPage"-->
+<!--            :disabled="page === 1"-->
+<!--            class="w-10 h-10 rounded-xl border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-50 hover:border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"-->
+<!--          >-->
+<!--            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-5 h-5">-->
+<!--              <path d="M15 19l-7-7 7-7"/>-->
+<!--            </svg>-->
+<!--          </button>-->
 
-          <template v-if="totalPages <= 5">
-            <button
-              v-for="pageNum in totalPages"
-              :key="pageNum"
-              @click="goToPage(pageNum)"
-              class="w-10 h-10 rounded-xl font-medium transition-all duration-200"
-              :class="page === pageNum
-                ? 'text-white shadow-lg'
-                : 'text-gray-600 hover:bg-gray-50 border border-gray-200'"
-              :style="page === pageNum ? { background: `linear-gradient(135deg, var(--theme-color-500), var(--theme-color-600))`, boxShadow: `0 4px 15px color-mix(in srgb, var(--theme-color) 30%, transparent)` } : {}"
-            >
-              {{ pageNum }}
-            </button>
-          </template>
+<!--          <template v-if="totalPages <= 5">-->
+<!--            <button-->
+<!--              v-for="pageNum in totalPages"-->
+<!--              :key="pageNum"-->
+<!--              @click="goToPage(pageNum)"-->
+<!--              class="w-10 h-10 rounded-xl font-medium transition-all duration-200"-->
+<!--              :class="page === pageNum-->
+<!--                ? 'text-white shadow-lg'-->
+<!--                : 'text-gray-600 hover:bg-gray-50 border border-gray-200'"-->
+<!--              :style="page === pageNum ? { background: `linear-gradient(135deg, var(&#45;&#45;theme-color-500), var(&#45;&#45;theme-color-600))`, boxShadow: `0 4px 15px color-mix(in srgb, var(&#45;&#45;theme-color) 30%, transparent)` } : {}"-->
+<!--            >-->
+<!--              {{ pageNum }}-->
+<!--            </button>-->
+<!--          </template>-->
 
-          <template v-else>
-            <button
-              @click="goToPage(1)"
-              class="w-10 h-10 rounded-xl font-medium transition-all duration-200"
-              :class="page === 1
-                ? 'text-white shadow-lg'
-                : 'text-gray-600 hover:bg-gray-50 border border-gray-200'"
-              :style="page === 1 ? { background: `linear-gradient(135deg, var(--theme-color-500), var(--theme-color-600))`, boxShadow: `0 4px 15px color-mix(in srgb, var(--theme-color) 30%, transparent)` } : {}"
-            >
-              1
-            </button>
+<!--          <template v-else>-->
+<!--            <button-->
+<!--              @click="goToPage(1)"-->
+<!--              class="w-10 h-10 rounded-xl font-medium transition-all duration-200"-->
+<!--              :class="page === 1-->
+<!--                ? 'text-white shadow-lg'-->
+<!--                : 'text-gray-600 hover:bg-gray-50 border border-gray-200'"-->
+<!--              :style="page === 1 ? { background: `linear-gradient(135deg, var(&#45;&#45;theme-color-500), var(&#45;&#45;theme-color-600))`, boxShadow: `0 4px 15px color-mix(in srgb, var(&#45;&#45;theme-color) 30%, transparent)` } : {}"-->
+<!--            >-->
+<!--              1-->
+<!--            </button>-->
 
-            <span v-if="page > 3" class="w-10 h-10 flex items-center justify-center text-gray-400">...</span>
+<!--            <span v-if="page > 3" class="w-10 h-10 flex items-center justify-center text-gray-400">...</span>-->
 
-            <button
-              v-if="page > 2"
-              @click="goToPage(page - 1)"
-              class="w-10 h-10 rounded-xl font-medium text-gray-600 hover:bg-gray-50 border border-gray-200 transition-all duration-200"
-            >
-              {{ page - 1 }}
-            </button>
+<!--            <button-->
+<!--              v-if="page > 2"-->
+<!--              @click="goToPage(page - 1)"-->
+<!--              class="w-10 h-10 rounded-xl font-medium text-gray-600 hover:bg-gray-50 border border-gray-200 transition-all duration-200"-->
+<!--            >-->
+<!--              {{ page - 1 }}-->
+<!--            </button>-->
 
-            <button
-              class="w-10 h-10 rounded-xl font-medium text-white shadow-lg"
-              :style="{ background: `linear-gradient(135deg, var(--theme-color-500), var(--theme-color-600))`, boxShadow: `0 4px 15px color-mix(in srgb, var(--theme-color) 30%, transparent)` }"
-            >
-              {{ page }}
-            </button>
+<!--            <button-->
+<!--              class="w-10 h-10 rounded-xl font-medium text-white shadow-lg"-->
+<!--              :style="{ background: `linear-gradient(135deg, var(&#45;&#45;theme-color-500), var(&#45;&#45;theme-color-600))`, boxShadow: `0 4px 15px color-mix(in srgb, var(&#45;&#45;theme-color) 30%, transparent)` }"-->
+<!--            >-->
+<!--              {{ page }}-->
+<!--            </button>-->
 
-            <button
-              v-if="page < totalPages - 1"
-              @click="goToPage(page + 1)"
-              class="w-10 h-10 rounded-xl font-medium text-gray-600 hover:bg-gray-50 border border-gray-200 transition-all duration-200"
-            >
-              {{ page + 1 }}
-            </button>
+<!--            <button-->
+<!--              v-if="page < totalPages - 1"-->
+<!--              @click="goToPage(page + 1)"-->
+<!--              class="w-10 h-10 rounded-xl font-medium text-gray-600 hover:bg-gray-50 border border-gray-200 transition-all duration-200"-->
+<!--            >-->
+<!--              {{ page + 1 }}-->
+<!--            </button>-->
 
-            <span v-if="page < totalPages - 2" class="w-10 h-10 flex items-center justify-center text-gray-400">...</span>
+<!--            <span v-if="page < totalPages - 2" class="w-10 h-10 flex items-center justify-center text-gray-400">...</span>-->
 
-            <button
-              @click="goToPage(totalPages)"
-              class="w-10 h-10 rounded-xl font-medium transition-all duration-200"
-              :class="page === totalPages
-                ? 'text-white shadow-lg'
-                : 'text-gray-600 hover:bg-gray-50 border border-gray-200'"
-              :style="page === totalPages ? { background: `linear-gradient(135deg, var(--theme-color-500), var(--theme-color-600))`, boxShadow: `0 4px 15px color-mix(in srgb, var(--theme-color) 30%, transparent)` } : {}"
-            >
-              {{ totalPages }}
-            </button>
-          </template>
+<!--            <button-->
+<!--              @click="goToPage(totalPages)"-->
+<!--              class="w-10 h-10 rounded-xl font-medium transition-all duration-200"-->
+<!--              :class="page === totalPages-->
+<!--                ? 'text-white shadow-lg'-->
+<!--                : 'text-gray-600 hover:bg-gray-50 border border-gray-200'"-->
+<!--              :style="page === totalPages ? { background: `linear-gradient(135deg, var(&#45;&#45;theme-color-500), var(&#45;&#45;theme-color-600))`, boxShadow: `0 4px 15px color-mix(in srgb, var(&#45;&#45;theme-color) 30%, transparent)` } : {}"-->
+<!--            >-->
+<!--              {{ totalPages }}-->
+<!--            </button>-->
+<!--          </template>-->
 
-          <button
-            @click="nextPage"
-            :disabled="page === totalPages"
-            class="w-10 h-10 rounded-xl border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-50 hover:border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
-          >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-5 h-5">
-              <path d="M9 5l7 7-7 7"/>
-            </svg>
-          </button>
-        </div>
+<!--          <button-->
+<!--            @click="nextPage"-->
+<!--            :disabled="page === totalPages"-->
+<!--            class="w-10 h-10 rounded-xl border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-50 hover:border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"-->
+<!--          >-->
+<!--            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-5 h-5">-->
+<!--              <path d="M9 5l7 7-7 7"/>-->
+<!--            </svg>-->
+<!--          </button>-->
+<!--        </div>-->
       </div>
     </div>
   </div>
