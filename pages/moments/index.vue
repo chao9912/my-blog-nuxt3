@@ -96,7 +96,7 @@ onMounted(() => {
       <AppLoading v-if="loading" />
       <MomentGrid v-else :moments="moments" />
 
-      <div v-if="!loading" class="flex items-center justify-center mt-8">
+      <div v-if="!loading&&total > 0" class="flex items-center justify-center mt-8">
         <n-pagination v-model:page="page"
                       :item-count="total"
                       size="large"
