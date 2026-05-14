@@ -44,6 +44,7 @@ declare module 'vue' {
     NButton: typeof import('naive-ui')['NButton']
     NCarousel: typeof import('naive-ui')['NCarousel']
     NConfigProvider: typeof import('naive-ui')['NConfigProvider']
+    NDatePicker: typeof import('naive-ui')['NDatePicker']
     NForm: typeof import('naive-ui')['NForm']
     NFormItem: typeof import('naive-ui')['NFormItem']
     NImage: typeof import('naive-ui')['NImage']

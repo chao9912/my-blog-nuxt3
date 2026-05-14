@@ -28,18 +28,18 @@ const mediaUrlsList = computed<MediaItem[]>(() => {
   if (!props.mediaUrls) {
     return []
   }
-  
+
   if (props.category === 'photo' || props.category === 'mixed') {
     return `${props.cover},${props.mediaUrls}`
       .split(',')
       .map((url, index) => ({
-        vKey: `${props.id}-${index+(new Date().getTime())}`,
+        vKey: `${index}-${(new Date().getTime())}`,
         name: props.title,
         url: url.trim()
       }))
       .filter(item => item.url)
   }
-  
+
   if (props.category === 'video') {
     return [{
       vKey: props.title,
@@ -47,7 +47,7 @@ const mediaUrlsList = computed<MediaItem[]>(() => {
       url: props.mediaUrls
     }]
   }
-  
+
   return []
 })
 </script>
@@ -63,7 +63,7 @@ const mediaUrlsList = computed<MediaItem[]>(() => {
           class="w-full h-[200px]">
         <img class="object-cover" v-for="item in mediaUrlsList" :key="item.vKey" :src="item.url" alt="图片">
       </n-carousel>
-      <n-image  v-else width="100%" lazy   class="w-full h-[200px] object-cover group-hover:scale-105 transition-transform duration-500" :src="cover" alt="图片"/>
+      <n-image  v-else width="100%"   class="w-full h-[200px] object-cover group-hover:scale-105 transition-transform duration-500" :src="cover" alt="图片"/>
       <div v-if="isVideo && duration" class="absolute bottom-3 right-3 px-2.5 py-1 bg-black/70 rounded-lg text-white text-xs font-medium">
         {{ duration }}
       </div>
@@ -75,23 +75,23 @@ const mediaUrlsList = computed<MediaItem[]>(() => {
         </div>
       </div>
     </div>
-    
+
     <div class="p-4">
       <h3 class="text-base font-semibold text-gray-900 mb-2 line-clamp-1">
         {{ title }}
       </h3>
-      
+
       <p class="text-sm text-gray-500 line-clamp-2 leading-relaxed mb-3">
         {{ desc }}
       </p>
-      
+
       <div class="inline-flex px-3 py-1 rounded-lg bg-[var(--theme-color-50)] text-[var(--theme-color)] text-xs font-medium mb-4">
         {{ tag }}
       </div>
-      
+
       <div class="flex items-center justify-between text-gray-400 text-xs">
         <span>{{ date }}</span>
-        
+
         <div class="flex items-center gap-4">
           <span class="flex items-center gap-1">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">

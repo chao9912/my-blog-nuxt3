@@ -1,9 +1,9 @@
 <template>
-  <n-config-provider>
+  <n-config-provider :locale="zhCN" :date-locale="dateZhCN">
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
-    
+
     <Transition name="fade">
       <div v-if="isLoading" class="loading-overlay">
         <div class="loading-content">
@@ -28,8 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
-
+import { zhCN, dateZhCN } from 'naive-ui'
 const isLoading = ref(true)
 const loadingChars = ['加', '载', '中', '.', '.', '.']
 

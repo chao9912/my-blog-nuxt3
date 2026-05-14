@@ -2,12 +2,12 @@
 import { ref } from 'vue'
 
 const viewMode = ref('grid')
-const selectedTime = ref('all')
+const selectedTime = ref('')
 
 const timeOptions = [
     {
       label: '全部时间',
-      value: 'all'
+      value: ''
     },
     {
       label: '最近一周',
