@@ -14,7 +14,7 @@ defineProps<{
 </script>
 
 <template>
-  <div class="bg-white rounded-[20px] overflow-hidden border border-gray-100 hover:shadow-xl hover:shadow-gray-200/50 transition-all duration-300 group cursor-pointer">
+  <div class="bg-white rounded-[12px] overflow-hidden border border-gray-100 hover:shadow-xl hover:shadow-gray-200/50 transition-all duration-300 group cursor-pointer">
     <div class="relative overflow-hidden">
       <img
         :src="cover"

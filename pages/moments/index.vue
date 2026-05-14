@@ -99,7 +99,7 @@ onMounted(() => {
     </section>
 
     <div class="px-6 py-5 lg:px-10 lg:py-6">
-      <div class="flex items-center justify-between mb-5">
+      <div class="flex items-center justify-between ">
         <MomentFilter />
         <MomentToolbar />
       </div>
