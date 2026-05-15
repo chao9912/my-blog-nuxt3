@@ -137,7 +137,7 @@ body {
 
   overflow: hidden;
 
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+  background: #ffffff;
 }
 
 /* 背景动画 */
@@ -151,7 +151,7 @@ body {
   position: absolute;
   border-radius: 50%;
   filter: blur(80px);
-  opacity: 0.4;
+  opacity: 0.3;
 }
 
 .bg-circle-1 {
@@ -159,7 +159,7 @@ body {
   height: 400px;
   top: -100px;
   left: -100px;
-  background: radial-gradient(circle, rgba(99, 102, 241, 0.6), transparent);
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.3), transparent);
   animation: bgFloat1 8s ease-in-out infinite;
 }
 
@@ -168,7 +168,7 @@ body {
   height: 300px;
   bottom: -50px;
   right: -50px;
-  background: radial-gradient(circle, rgba(168, 85, 247, 0.5), transparent);
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.25), transparent);
   animation: bgFloat2 6s ease-in-out infinite;
 }
 
@@ -178,7 +178,7 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: radial-gradient(circle, rgba(59, 130, 246, 0.4), transparent);
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.2), transparent);
   animation: bgFloat3 7s ease-in-out infinite;
 }
 
@@ -214,7 +214,7 @@ body {
 .orbit-ring {
   position: absolute;
   inset: 0;
-  border: 2px solid rgba(99, 102, 241, 0.2);
+  border: 2px solid var(--theme-color-300);
   border-radius: 50%;
 }
 
@@ -258,7 +258,7 @@ body {
 
   background: radial-gradient(
       circle,
-      rgba(var(--theme-color-rgb), 0.15),
+      rgba(var(--theme-color), 0.15),
       transparent 70%
   );
 
@@ -274,9 +274,9 @@ body {
 
   font-size: 24px;
   font-weight: 700;
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(15, 23, 42, 0.9);
 
-  text-shadow: 0 0 30px rgba(var(--theme-color-rgb), 0.3);
+  text-shadow: 0 0 30px rgba(var(--theme-color), 0.15);
 }
 
 .loading-char {
@@ -293,13 +293,13 @@ body {
 
   overflow: hidden;
 
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(15, 23, 42, 0.08);
 
   border-radius: 999px;
 
   box-shadow: 
-      inset 0 2px 4px rgba(0, 0, 0, 0.3),
-      0 0 20px rgba(var(--theme-color-rgb), 0.2);
+      inset 0 2px 4px rgba(0, 0, 0, 0.08),
+      0 0 20px rgba(var(--theme-color), 0.1);
 }
 
 .loading-progress-bar {
@@ -316,7 +316,7 @@ body {
 
   transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
-  box-shadow: 0 0 15px rgba(var(--theme-color-rgb), 0.5);
+  box-shadow: 0 0 15px rgba(var(--theme-color), 0.5);
 }
 
 .progress-shine {
@@ -406,11 +406,11 @@ body {
 @keyframes logoPulse {
   0%, 100% {
     transform: scale(1);
-    filter: drop-shadow(0 0 20px rgba(var(--theme-color-rgb), 0.5));
+    filter: drop-shadow(0 0 20px rgba(var(--theme-color), 0.5));
   }
   50% {
     transform: scale(1.05);
-    filter: drop-shadow(0 0 30px rgba(var(--theme-color-rgb), 0.7));
+    filter: drop-shadow(0 0 30px rgba(var(--theme-color), 0.7));
   }
 }
 
