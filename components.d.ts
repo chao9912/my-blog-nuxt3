@@ -37,6 +37,7 @@ declare module 'vue' {
     HomeTagCard: typeof import('./components/home/HomeTagCard.vue')['default']
     LineChart: typeof import('./components/chart/LineChart.vue')['default']
     LoadingOverlay: typeof import('./components/LoadingOverlay.vue')['default']
+    LoginModal: typeof import('./components/LoginModal.vue')['default']
     MomentCard: typeof import('./components/moment/MomentCard.vue')['default']
     MomentFilter: typeof import('./components/moment/MomentFilter.vue')['default']
     MomentGrid: typeof import('./components/moment/MomentGrid.vue')['default']

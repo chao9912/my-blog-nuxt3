@@ -1,9 +1,20 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import { NIcon } from 'naive-ui'
 import { NotificationsOutline, SearchOutline, LogInOutline } from '@vicons/ionicons5'
 import { useUserStore } from '~/stores/user'
+import LoginModal from '~/components/LoginModal.vue'
 
 const userStore = useUserStore()
+const showLoginModal = ref(false)
+
+const handleLoginClick = () => {
+  showLoginModal.value = true
+}
+
+const handleCloseModal = () => {
+  showLoginModal.value = false
+}
 </script>
 
 <template>
@@ -43,9 +54,13 @@ const userStore = useUserStore()
     <button v-else
             class="w-[80px] h-[40px] text-white rounded-full flex items-center justify-center gap-1 text-sm font-medium shadow-md hover:shadow-lg transition-all"
             :style="{ backgroundColor: 'var(--theme-color)' }"
+            @click="handleLoginClick"
     >
       <LogInOutline class="w-4 h-4" />
       <span>登录</span>
     </button>
+
+    <!-- Login Modal -->
+    <LoginModal :visible="showLoginModal" @close="handleCloseModal" />
   </header>
 </template>
