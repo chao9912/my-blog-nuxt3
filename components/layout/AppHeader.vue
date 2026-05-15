@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { NIcon } from 'naive-ui'
-import { NotificationsOutline, SearchOutline } from '@vicons/ionicons5'
+import { NotificationsOutline, SearchOutline, LogInOutline } from '@vicons/ionicons5'
+import { useUserStore } from '~/stores/user'
+
+const userStore = useUserStore()
 </script>
 
 <template>
@@ -25,10 +28,24 @@ import { NotificationsOutline, SearchOutline } from '@vicons/ionicons5'
     </div>
 
     <!-- avatar -->
-    <img
-        alt="头像"
-        src="https://picsum.photos/100"
-        class="w-[41px] h-[41px] rounded-full object-cover  shadow-xl border border-white"
-    />
+    <div v-if="userStore.isLogin" class="flex justify-end items-center gap-2">
+      <div class="text-right">
+        <p class="text-sm font-medium text-slate-700">{{ userStore.userInfo.username || '用户' }}</p>
+        <p class="text-xs text-slate-400">已登录</p>
+      </div>
+      <img
+          alt="头像"
+          src="https://picsum.photos/100"
+          class="w-[41px] h-[41px] rounded-full object-cover shadow-xl border border-white flex-shrink-0"
+      />
+    </div>
+
+    <button v-else
+            class="w-[80px] h-[40px] text-white rounded-full flex items-center justify-center gap-1 text-sm font-medium shadow-md hover:shadow-lg transition-all"
+            :style="{ backgroundColor: 'var(--theme-color)' }"
+    >
+      <LogInOutline class="w-4 h-4" />
+      <span>登录</span>
+    </button>
   </header>
 </template>
