@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { fetchMomentList } from '@/composables/momentsApi'
-
+const { getMomentList } = useApi()
 
 const page = ref(1)
 const pageSize = 8
@@ -12,7 +11,7 @@ watch(category, () => {
 
 const { data: momentData, pending: loading } = useAsyncData(
   () => `moment-list-${page.value}-${category.value}`,
-  () => fetchMomentList(page.value, pageSize, category.value)
+  () => getMomentList(page.value, pageSize, category.value)
 )
 
 const moments = computed(() => momentData.value?.list || [])
