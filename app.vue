@@ -1,8 +1,10 @@
 <template>
   <n-config-provider :locale="zhCN" :date-locale="dateZhCN">
-    <NuxtLayout>
-      <NuxtPage />
-    </NuxtLayout>
+    <n-message-provider>
+      <NuxtLayout>
+        <NuxtPage/>
+      </NuxtLayout>
+    </n-message-provider>
 
     <!-- Loading -->
     <Transition name="loading-fade">
@@ -22,7 +24,7 @@
               <div class="orbit-ring"></div>
               <div class="orbit-dot"></div>
             </div>
-            
+
             <!-- Logo -->
             <div class="loading-logo">
               <svg
@@ -35,7 +37,7 @@
                 <path
                     d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"
                 />
-                <circle cx="12" cy="13" r="4" />
+                <circle cx="12" cy="13" r="4"/>
               </svg>
             </div>
 
@@ -75,7 +77,7 @@
 </template>
 
 <script setup lang="ts">
-import { zhCN, dateZhCN } from 'naive-ui'
+import {zhCN, dateZhCN} from 'naive-ui'
 
 const showLoading = ref(true)
 const progress = ref(0)
@@ -297,9 +299,8 @@ body {
 
   border-radius: 999px;
 
-  box-shadow: 
-      inset 0 2px 4px rgba(0, 0, 0, 0.08),
-      0 0 20px rgba(var(--theme-color), 0.1);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.08),
+  0 0 20px rgba(var(--theme-color), 0.1);
 }
 
 .loading-progress-bar {
@@ -470,9 +471,8 @@ body {
 }
 
 .loading-fade-leave-active {
-  transition: 
-      opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1),
-      transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+  transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .loading-fade-enter-from {
