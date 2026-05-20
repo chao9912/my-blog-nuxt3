@@ -10,13 +10,29 @@ const emit = defineEmits<{
 }>()
 
 const activeTab = ref<'email' | 'wechat'>('email')
+const isRegister = ref(false)
 const email = ref('')
 const password = ref('')
+const nickname = ref('')
 
 const handleLogin = () => {
   if (email.value && password.value) {
     emit('close')
   }
+}
+
+const handleRegister = () => {
+  if (email.value && password.value && nickname.value) {
+    emit('close')
+  }
+}
+
+const switchToRegister = () => {
+  isRegister.value = true
+}
+
+const switchToLogin = () => {
+  isRegister.value = false
 }
 </script>
 
@@ -43,11 +59,11 @@ const handleLogin = () => {
               </div>
             </div>
             <h3 class="app-name">博客空间</h3>
-            <p class="app-desc">欢迎回来，请登录您的账户</p>
+            <p class="app-desc">{{ isRegister ? '创建新账户，开启您的博客之旅' : '欢迎回来，请登录您的账户' }}</p>
           </div>
 
           <!-- 标签切换 -->
-          <div class="tabs">
+          <div class="tabs" v-if="!isRegister">
             <button 
               class="tab-btn" 
               :class="{ active: activeTab === 'email' }"
@@ -71,10 +87,35 @@ const handleLogin = () => {
               <span>微信登录</span>
             </button>
           </div>
+          <div class="tabs" v-else>
+            <button 
+              class="tab-btn" 
+              :class="{ active: !isRegister }"
+              @click="switchToLogin"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-4 h-4">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+              <span>登 录</span>
+            </button>
+            <button 
+              class="tab-btn" 
+              :class="{ active: isRegister }"
+              @click="switchToRegister"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-4 h-4">
+                <path d="M12 4v16m8-8H4"/>
+              </svg>
+              <span>注 册</span>
+            </button>
+          </div>
 
-          <!-- 邮箱登录表单 -->
+          <!-- 表单区域 -->
           <Transition name="fade" mode="out-in">
-            <div v-if="activeTab === 'email'" key="email" class="email-form">
+            <div v-if="!isRegister && activeTab === 'email'" key="email" class="email-form">
               <div class="form-group">
                 <label class="form-label">邮箱</label>
                 <div class="input-wrapper">
@@ -115,12 +156,12 @@ const handleLogin = () => {
 
               <div class="form-footer">
                 <a href="#" class="forgot-link">忘记密码？</a>
-                <a href="#" class="register-link">注册账号</a>
+                <a href="#" class="register-link" @click.prevent="switchToRegister">注册账号</a>
               </div>
             </div>
 
             <!-- 微信登录 -->
-            <div v-else key="wechat" class="wechat-form">
+            <div v-else-if="!isRegister && activeTab === 'wechat'" key="wechat" class="wechat-form">
               <div class="qr-code-wrapper">
                 <div class="qr-code">
                   <img 
@@ -130,6 +171,69 @@ const handleLogin = () => {
                   />
                 </div>
                 <p class="qr-tip">使用微信扫码登录</p>
+              </div>
+            </div>
+
+            <!-- 注册表单 -->
+            <div v-else key="register" class="email-form">
+              <div class="form-group">
+                <label class="form-label">邮箱</label>
+                <div class="input-wrapper">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-4 h-4 input-icon">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                    <polyline points="22,6 12,13 2,6"/>
+                  </svg>
+                  <input 
+                    v-model="email"
+                    type="email" 
+                    placeholder="请输入邮箱账号" 
+                    class="form-input"
+                    @keyup.enter="handleRegister"
+                  />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">密码</label>
+                <div class="input-wrapper">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-4 h-4 input-icon">
+                    <rect x="3" y="11" width="18" height="11" rx="2" />
+                    <path d="M7 11V7a5 5 0 0110 0v4" />
+                  </svg>
+                  <input 
+                    v-model="password"
+                    type="password" 
+                    placeholder="请输入密码" 
+                    class="form-input"
+                    @keyup.enter="handleRegister"
+                  />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">昵称</label>
+                <div class="input-wrapper">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-4 h-4 input-icon">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                  </svg>
+                  <input 
+                    v-model="nickname"
+                    type="text" 
+                    placeholder="请输入昵称" 
+                    class="form-input"
+                    @keyup.enter="handleRegister"
+                  />
+                </div>
+              </div>
+
+              <button class="submit-btn" @click="handleRegister">
+                <span>注 册</span>
+              </button>
+
+              <div class="form-footer">
+                <span class="forgot-link">已有账号？</span>
+                <a href="#" class="register-link" @click.prevent="switchToLogin">立即登录</a>
               </div>
             </div>
           </Transition>
