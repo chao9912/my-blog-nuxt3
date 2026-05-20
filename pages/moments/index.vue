@@ -36,8 +36,8 @@ function updatePage(newPage: number) {
 </script>
 
 <template>
-  <div>
-    <section class="banner-cu relative overflow-hidden px-6 pb-8 pt-[84px] lg:px-10 lg:pb-12 lg:pt-[84px]" style="background: linear-gradient(135deg, var(--theme-color-50), var(--theme-color-100), var(--theme-color-50));">
+  <div class="moments-container">
+    <section class="banner-cu animate-slide-up animation-delay-200 relative overflow-hidden px-6 pb-8 pt-[84px] lg:px-10 lg:pb-12 lg:pt-[84px]" style="background: linear-gradient(135deg, var(--theme-color-50), var(--theme-color-100), var(--theme-color-50));">
       <div class="absolute inset-0 z-0 overflow-hidden">
         <div class="absolute -left-20 top-0 h-60 w-60 rounded-full blur-3xl" :style="{ backgroundColor: 'color-mix(in srgb, var(--theme-color) 20%, transparent)' }"></div>
         <div class="absolute right-0 top-0 h-40 w-40 rounded-full blur-3xl" :style="{ backgroundColor: 'color-mix(in srgb, var(--theme-color) 10%, transparent)' }"></div>
@@ -70,29 +70,34 @@ function updatePage(newPage: number) {
     </section>
 
     <div class="px-6 py-5 lg:px-10 lg:py-6">
-      <div class="flex items-center justify-between ">
+      <div class="animate-slide-up animation-delay-300 flex items-center justify-between ">
         <MomentFilter v-model="category" />
         <MomentToolbar />
       </div>
 
-      <AppLoading v-if="loading" />
+      <div class="animate-slide-up animation-delay-400">
+        <AppLoading v-if="loading" />
+        <Transition name="fade-slide">
+          <MomentGrid v-if="!loading && moments.length > 0" :moments="moments" />
+        </Transition>
+        <div v-if="!loading && moments.length === 0" class="text-center py-12">
+          <svg class="w-16 h-16 mx-auto text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+            <circle cx="12" cy="13" r="4"/>
+          </svg>
+          <p class="mt-4 text-gray-500">暂无动态数据</p>
+        </div>
+      </div>
+      
       <Transition name="fade-slide">
-        <MomentGrid v-if="!loading && moments.length > 0" :moments="moments" />
+        <div v-if="!loading&&isPage" class="animate-slide-up animation-delay-500 flex items-center justify-center mt-8">
+          <n-pagination v-model:page="page"
+                        :item-count="total"
+                        :page-size="pageSize"
+                        size="large"
+                        :on-update:page="updatePage"/>
+        </div>
       </Transition>
-      <div v-if="!loading && moments.length === 0" class="text-center py-12">
-        <svg class="w-16 h-16 mx-auto text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-          <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-          <circle cx="12" cy="13" r="4"/>
-        </svg>
-        <p class="mt-4 text-gray-500">暂无动态数据</p>
-      </div>
-      <div v-if="!loading&&isPage" class="flex items-center justify-center mt-8">
-        <n-pagination v-model:page="page"
-                      :item-count="total"
-                      :page-size="pageSize"
-                      size="large"
-                      :on-update:page="updatePage"/>
-      </div>
     </div>
   </div>
 </template>
