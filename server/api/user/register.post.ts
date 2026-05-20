@@ -4,6 +4,7 @@ import {
     error
 } from '~/server/utils/response'
 import { createToken } from '~/server/utils/jwt'
+import { setCookie } from 'h3'
 
 const generateUsername = (email: string): string => {
     const match = email.match(/^([^@]+)@/)
@@ -59,6 +60,14 @@ export default defineEventHandler(async (event) => {
     const token = createToken({
         id: user.id,
         username: user.username
+    })
+
+    setCookie(event, 'auth_token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 7 * 24 * 60 * 60,
+        path: '/'
     })
 
     return success({

@@ -1,11 +1,10 @@
 import prisma from '~/server/utils/prisma'
 import { success, error } from '~/server/utils/response'
 import { verifyToken } from '~/server/utils/jwt'
-
+import { defineEventHandler, getCookie, createError, getQuery } from 'h3'
 export default defineEventHandler(async (event) => {
-    const authorization = event.headers.get('authorization')
-    const token = authorization?.replace('Bearer ', '')
-    
+    const token = getCookie(event, 'auth_token')
+    console.log(token);
     let isLoggedIn = false
     let decoded: { id: number; username: string } | null = null
     
@@ -49,7 +48,14 @@ export default defineEventHandler(async (event) => {
             totalPages: Math.ceil(total / pageSize)
         })
     } else {
-        const where: any = {}
+        const oneWeekAgo = new Date()
+        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7)
+        
+        const where: any = {
+            createTime: {
+                gte: oneWeekAgo
+            }
+        }
         if (category && category !== 'all') {
             where.category = category
         }
@@ -59,15 +65,14 @@ export default defineEventHandler(async (event) => {
                 where,
                 orderBy: {
                     createTime: 'desc'
-                }
+                },
+                skip: (page - 1) * pageSize,
+                take: pageSize
             }),
             prisma.moment.count({ where })
         ])
         
-        const shuffled = [...list].sort(() => Math.random() - 0.5)
-        const start = (page - 1) * pageSize
-        const end = start + pageSize
-        const paginatedList = shuffled.slice(start, end)
+        const paginatedList = list
         
         return success({
             list: paginatedList,

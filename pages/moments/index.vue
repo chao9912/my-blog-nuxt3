@@ -1,6 +1,4 @@
 <script setup lang="ts">
-const { getMomentList } = useApi()
-
 const page = ref(1)
 const pageSize = 8
 const category = ref('all')
@@ -10,8 +8,19 @@ watch(category, () => {
 })
 
 const { data: momentData, pending: loading, refresh } = useAsyncData(
-  () => `moment-list-${page.value}-${category.value}`,
-  () => getMomentList(page.value, pageSize, category.value)
+  'moment-list',
+  async () => {
+    const response = await $fetch(`/api/moment/list`, {
+      params: { page: page.value, pageSize, category: category.value !== 'all' ? category.value : undefined },
+      credentials: 'include',
+      headers: useRequestEvent()?.headers
+    })
+    return response.data
+  },
+  {
+    server: true,
+    watch: [page, category]
+  }
 )
 const moments = computed(() => momentData.value?.list || [])
 const total = computed(() => momentData.value?.total || 0)
