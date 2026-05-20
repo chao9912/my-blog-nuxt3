@@ -31,7 +31,7 @@ const isEmailValid = computed(() => {
 
 const isPasswordValid = computed(() => {
   if (!password.value) return null
-  return password.value.length === 6
+  return password.value.length >= 6
 })
 
 const isNicknameValid = computed(() => {
@@ -52,8 +52,8 @@ const handleLogin = async () => {
     message.error('请输入密码')
     return
   }
-  if (password.value.length !== 6) {
-    message.error('密码必须为6位')
+  if (password.value.length < 6) {
+    message.error('密码至少需要6位')
     return
   }
 
@@ -89,8 +89,8 @@ const handleRegister = async () => {
     message.error('请输入密码')
     return
   }
-  if (password.value.length !== 6) {
-    message.error('密码必须为6位')
+  if (password.value.length < 6) {
+    message.error('密码至少需要6位')
     return
   }
   if (!nickname.value) {
