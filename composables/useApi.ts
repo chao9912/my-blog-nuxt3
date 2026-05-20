@@ -1,3 +1,11 @@
+import { useUserStore } from '~/stores/user'
+
+interface ApiResponse<T = any> {
+    code: number
+    message: string
+    data: T
+}
+
 interface MomentItem {
   id: number
   title: string
@@ -35,48 +43,79 @@ interface LoginResponse {
   userInfo: UserInfo
 }
 
+const handleUnauthorized = () => {
+    if (process.client) {
+        const userStore = useUserStore()
+        userStore.logout()
+    }
+}
+
 export const useApi = () => {
-    const getArticleList = (params?: any) => {
-        return $fetch('/api/article/list', {
-            params
-        })
+    const { $apiFetch } = useNuxtApp()
+
+    const getArticleList = async (params?: any) => {
+        const response = await $apiFetch('/api/article/list', { params }) as ApiResponse
+        if (response.code === 401) {
+            handleUnauthorized()
+            return null
+        }
+        return response
     }
 
-    const getArticleDetail = (id: number) => {
-        return $fetch('/api/article/detail', {
-            params: {id}
-        })
+    const getArticleDetail = async (id: number) => {
+        const response = await $apiFetch('/api/article/detail', { params: {id} }) as ApiResponse
+        if (response.code === 401) {
+            handleUnauthorized()
+            return null
+        }
+        return response
     }
 
-    const createArticle = (data: any) => {
-        return $fetch('/api/article/create', {
-            method: 'POST',
-            body: data
-        })
+    const createArticle = async (data: any) => {
+        const response = await $apiFetch('/api/article/create', { method: 'POST', body: data }) as ApiResponse
+        if (response.code === 401) {
+            handleUnauthorized()
+            return null
+        }
+        return response
     }
 
-    const updateArticle = (data: any) => {
-        return $fetch('/api/article/update', {
-            method: 'PUT',
-            body: data
-        })
+    const updateArticle = async (data: any) => {
+        const response = await $apiFetch('/api/article/update', { method: 'PUT', body: data }) as ApiResponse
+        if (response.code === 401) {
+            handleUnauthorized()
+            return null
+        }
+        return response
     }
 
-    const deleteArticle = (id: number) => {
-        return $fetch('/api/article/delete', {
-            method: 'DELETE',
-            params: {id}
-        })
+    const deleteArticle = async (id: number) => {
+        const response = await $apiFetch('/api/article/delete', { method: 'DELETE', params: {id} }) as ApiResponse
+        if (response.code === 401) {
+            handleUnauthorized()
+            return null
+        }
+        return response
     }
 
     const getMomentList = async (page: number = 1, pageSize: number = 8, category: string|undefined = undefined): Promise<MomentListResponse> => {
-        const response = await $fetch(`/api/moment/list`,{
+        const response = await $apiFetch(`/api/moment/list`, {
             params:{page,pageSize,category:category!=='all'?category:undefined}
-        })
-        const data = response as { code: number; data: MomentListResponse; message: string }
+        }) as ApiResponse<MomentListResponse>
         
-        if (data.code === 200 && data.data) {
-            return data.data
+        if (response.code === 401) {
+            handleUnauthorized()
+            return {
+                list: [],
+                total: 0,
+                page,
+                pageSize,
+                totalPages: 0
+            }
+        }
+        
+        if (response.code === 200 && response.data) {
+            return response.data
         }
         
         return {
@@ -89,28 +128,36 @@ export const useApi = () => {
     }
 
     const login = async (email: string, password: string): Promise<LoginResponse | null> => {
-        const response = await $fetch('/api/user/login', {
+        const response = await $apiFetch('/api/user/login', {
             method: 'POST',
             body: { email, password }
-        })
-        const data = response as { code: number; data: LoginResponse; message: string }
+        }) as ApiResponse<LoginResponse>
         
-        if (data.code === 200 && data.data) {
-            return data.data
+        if (response.code === 401) {
+            handleUnauthorized()
+            return null
+        }
+        
+        if (response.code === 200 && response.data) {
+            return response.data
         }
         
         return null
     }
 
     const register = async (email: string, password: string, nickname: string): Promise<LoginResponse | null> => {
-        const response = await $fetch('/api/user/register', {
+        const response = await $apiFetch('/api/user/register', {
             method: 'POST',
             body: { email, password, nickname }
-        })
-        const data = response as { code: number; data: LoginResponse; message: string }
+        }) as ApiResponse<LoginResponse>
         
-        if (data.code === 200 && data.data) {
-            return data.data
+        if (response.code === 401) {
+            handleUnauthorized()
+            return null
+        }
+        
+        if (response.code === 200 && response.data) {
+            return response.data
         }
         
         return null

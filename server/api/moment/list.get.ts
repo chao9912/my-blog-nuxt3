@@ -4,23 +4,26 @@ import { verifyToken } from '~/server/utils/jwt'
 
 export default defineEventHandler(async (event) => {
     const authorization = event.headers.get('authorization')
-    if (!authorization) {
-        return error('未登录', 401)
+    const token = authorization?.replace('Bearer ', '')
+    
+    let isLoggedIn = false
+    let decoded: { id: number; username: string } | null = null
+    
+    if (token) {
+        try {
+            decoded = verifyToken(token) as { id: number; username: string }
+            isLoggedIn = true
+        } catch (e) {
+            isLoggedIn = false
+        }
     }
-
-    const token = authorization.replace('Bearer ', '')
-    if (!token) {
-        return error('未登录', 401)
-    }
-
-    try {
-        const decoded = verifyToken(token) as { id: number; username: string }
-        
-        const query = getQuery(event)
-        const page = parseInt(query.page as string) || 1
-        const pageSize = parseInt(query.pageSize as string) || 8
-        const category = query.category as string
-        
+    
+    const query = getQuery(event)
+    const page = parseInt(query.page as string) || 1
+    const pageSize = parseInt(query.pageSize as string) || 8
+    const category = query.category as string
+    
+    if (isLoggedIn && decoded) {
         const where: any = { publisherId: decoded.id }
         if (category && category !== 'all') {
             where.category = category
@@ -45,7 +48,33 @@ export default defineEventHandler(async (event) => {
             pageSize,
             totalPages: Math.ceil(total / pageSize)
         })
-    } catch (e) {
-        return error('token 无效', 401)
+    } else {
+        const where: any = {}
+        if (category && category !== 'all') {
+            where.category = category
+        }
+        
+        const [list, total] = await Promise.all([
+            prisma.moment.findMany({
+                where,
+                orderBy: {
+                    createTime: 'desc'
+                }
+            }),
+            prisma.moment.count({ where })
+        ])
+        
+        const shuffled = [...list].sort(() => Math.random() - 0.5)
+        const start = (page - 1) * pageSize
+        const end = start + pageSize
+        const paginatedList = shuffled.slice(start, end)
+        
+        return success({
+            list: paginatedList,
+            total,
+            page,
+            pageSize,
+            totalPages: Math.ceil(total / pageSize)
+        })
     }
 })
