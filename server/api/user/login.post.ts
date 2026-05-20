@@ -27,7 +27,7 @@ export default defineEventHandler(async (event) => {
     })
 
     if (!user) {
-        return error('邮箱或密码错误', 401)
+        return error('邮箱或密码错误', 500)
     }
 
     const token = createToken({
