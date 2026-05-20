@@ -1,6 +1,6 @@
 <template>
   <n-config-provider :locale="zhCN" :date-locale="dateZhCN">
-    <n-message-provider>
+    <n-message-provider :max="2">
       <NuxtLayout>
         <NuxtPage/>
       </NuxtLayout>

@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-
+import { useMessage } from 'naive-ui'
 defineProps<{
   visible: boolean
 }>()
-
+const message = useMessage()
 const emit = defineEmits<{
   (e: 'close'): void
 }>()
@@ -15,10 +15,27 @@ const email = ref('')
 const password = ref('')
 const nickname = ref('')
 
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
 const handleLogin = () => {
-  if (email.value && password.value) {
-    emit('close')
+  if (!email.value) {
+    message.error('请输入邮箱')
+    return
   }
+  if (!emailRegex.test(email.value)) {
+    message.error('请输入正确的邮箱格式')
+    return
+  }
+  if (!password.value) {
+    alert('请输入密码')
+    message.error('请输入密码')
+    return
+  }
+  if (password.value.length !== 6) {
+    message.error('密码必须为6位')
+    return
+  }
+  emit('close')
 }
 
 const handleRegister = () => {
@@ -143,7 +160,7 @@ const switchToLogin = () => {
                   <input 
                     v-model="password"
                     type="password" 
-                    placeholder="请输入密码" 
+                    placeholder="请输入至少6位数的密码"
                     class="form-input"
                     @keyup.enter="handleLogin"
                   />
