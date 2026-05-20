@@ -163,6 +163,18 @@ export const useApi = () => {
         return null
     }
 
+    const logout = async (): Promise<ApiResponse | null> => {
+        const response = await $apiFetch('/api/user/logout', {
+            method: 'POST'
+        }) as ApiResponse
+        
+        if (response.code === 200) {
+            handleUnauthorized()
+        }
+        
+        return response
+    }
+
     return {
         getArticleList,
         getArticleDetail,
@@ -171,6 +183,7 @@ export const useApi = () => {
         deleteArticle,
         getMomentList,
         login,
-        register
+        register,
+        logout
     }
 }

@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, h } from 'vue'
 import { NIcon } from 'naive-ui'
-import { NotificationsOutline, SearchOutline, LogInOutline } from '@vicons/ionicons5'
+import { NotificationsOutline, SearchOutline, LogInOutline, LogOutOutline } from '@vicons/ionicons5'
 import { useUserStore } from '~/stores/user'
+import { useApi } from '~/composables/useApi'
 import LoginModal from '~/components/LoginModal.vue'
 
 const userStore = useUserStore()
@@ -14,6 +15,13 @@ const handleLoginClick = () => {
 
 const handleCloseModal = () => {
   showLoginModal.value = false
+}
+
+const handleSelect = async (e:string) => {
+  if (e === 'logout') {
+    const { logout } = useApi()
+    await logout()
+  }
 }
 </script>
 
@@ -39,7 +47,14 @@ const handleCloseModal = () => {
     </div>
 
     <!-- avatar -->
-    <div v-if="userStore.isLogin" class="flex justify-end items-center gap-2">
+    <n-dropdown
+        v-if="userStore.isLogin"
+        placement="bottom-end"
+        trigger="hover"
+        :options="[{label: '退 出',key: 'logout', icon: () => h(NIcon, null, { default: () => h(LogOutOutline, { class: 'w-4 h-4' }) })}]"
+        @select="handleSelect"
+    >
+    <div  class="flex justify-end items-center gap-2">
       <div class="text-right">
         <p class="text-sm font-medium text-slate-700">{{ userStore.userInfo.nickname ||userStore.userInfo.username || '用户' }}</p>
         <p class="text-xs text-slate-400">已登录</p>
@@ -50,7 +65,7 @@ const handleCloseModal = () => {
           class="w-[41px] h-[41px] rounded-full object-cover shadow-xl border border-white flex-shrink-0"
       />
     </div>
-
+    </n-dropdown>
     <button v-else
             class="w-[80px] h-[40px] text-white rounded-full flex items-center justify-center gap-1 text-sm font-medium shadow-md hover:shadow-lg transition-all"
             :style="{ backgroundColor: 'var(--theme-color)' }"

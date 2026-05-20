@@ -65,6 +65,10 @@ const handleLogin = async () => {
     if (result) {
       userStore.login(result.token, result.userInfo)
       message.success('登录成功')
+      
+      email.value = ''
+      password.value = ''
+      
       emit('close')
     } else {
       message.error('登录失败，请稍后重试')
@@ -106,6 +110,11 @@ const handleRegister = async () => {
     if (result) {
       userStore.login(result.token, result.userInfo)
       message.success('注册成功')
+      
+      email.value = ''
+      password.value = ''
+      nickname.value = ''
+      
       emit('close')
     } else {
       message.error('注册失败，请稍后重试')

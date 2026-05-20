@@ -5,6 +5,7 @@ import { defineEventHandler, getCookie, createError } from 'h3'
 const AUTH_WHITE_LIST = [
     '/api/user/login',
     '/api/user/register',
+    '/api/user/logout',
     '/api/moment/list'
 ]
 
