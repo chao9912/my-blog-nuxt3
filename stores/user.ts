@@ -1,6 +1,8 @@
 interface UserInfo {
     id?: number
     username?: string
+    email?: string
+    nickname?: string
 }
 
 export const useUserStore = defineStore(
@@ -8,7 +10,6 @@ export const useUserStore = defineStore(
     {
         state: () => ({
             token: '',
-
             userInfo: {} as UserInfo
         }),
 
@@ -22,6 +23,11 @@ export const useUserStore = defineStore(
             },
 
             setUserInfo(userInfo: UserInfo) {
+                this.userInfo = userInfo
+            },
+
+            login(token: string, userInfo: UserInfo) {
+                this.token = token
                 this.userInfo = userInfo
             },
 

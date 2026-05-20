@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useMessage } from 'naive-ui'
-import { local } from '~/utils/storage'
+import { useUserStore } from '~/stores/user'
 
 defineProps<{
   visible: boolean
@@ -12,7 +12,8 @@ const emit = defineEmits<{
   (e: 'close'): void
 }>()
 
-const { register } = useApi()
+const { login: apiLogin, register } = useApi()
+const userStore = useUserStore()
 
 const activeTab = ref<'email' | 'wechat'>('email')
 const isRegister = ref(false)
@@ -38,7 +39,7 @@ const isNicknameValid = computed(() => {
   return nickname.value.length >= 1
 })
 
-const handleLogin = () => {
+const handleLogin = async () => {
   if (!email.value) {
     message.error('请输入邮箱')
     return
@@ -55,7 +56,24 @@ const handleLogin = () => {
     message.error('密码必须为6位')
     return
   }
-  emit('close')
+
+  isLoading.value = true
+
+  try {
+    const result = await apiLogin(email.value, password.value)
+
+    if (result) {
+      userStore.login(result.token, result.userInfo)
+      message.success('登录成功')
+      emit('close')
+    } else {
+      message.error('登录失败，请稍后重试')
+    }
+  } catch (error: any) {
+    message.error(error.response?._data?.message || '登录失败，请稍后重试')
+  } finally {
+    isLoading.value = false
+  }
 }
 
 const handleRegister = async () => {
@@ -86,7 +104,7 @@ const handleRegister = async () => {
     const result = await register(email.value, password.value, nickname.value)
     
     if (result) {
-      local.set('BK_Token', result.token)
+      userStore.login(result.token, result.userInfo)
       message.success('注册成功')
       emit('close')
     } else {

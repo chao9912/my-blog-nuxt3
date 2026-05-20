@@ -41,7 +41,7 @@ const handleCloseModal = () => {
     <!-- avatar -->
     <div v-if="userStore.isLogin" class="flex justify-end items-center gap-2">
       <div class="text-right">
-        <p class="text-sm font-medium text-slate-700">{{ userStore.userInfo.username || '用户' }}</p>
+        <p class="text-sm font-medium text-slate-700">{{ userStore.userInfo.nickname ||userStore.userInfo.username || '用户' }}</p>
         <p class="text-xs text-slate-400">已登录</p>
       </div>
       <img
