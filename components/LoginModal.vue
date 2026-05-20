@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useMessage } from 'naive-ui'
+
 defineProps<{
   visible: boolean
 }>()
+
 const message = useMessage()
 const emit = defineEmits<{
   (e: 'close'): void
@@ -17,6 +19,21 @@ const nickname = ref('')
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
+const isEmailValid = computed(() => {
+  if (!email.value) return null
+  return emailRegex.test(email.value)
+})
+
+const isPasswordValid = computed(() => {
+  if (!password.value) return null
+  return password.value.length === 6
+})
+
+const isNicknameValid = computed(() => {
+  if (!nickname.value) return null
+  return nickname.value.length >= 1
+})
+
 const handleLogin = () => {
   if (!email.value) {
     message.error('请输入邮箱')
@@ -27,7 +44,6 @@ const handleLogin = () => {
     return
   }
   if (!password.value) {
-    alert('请输入密码')
     message.error('请输入密码')
     return
   }
@@ -39,9 +55,27 @@ const handleLogin = () => {
 }
 
 const handleRegister = () => {
-  if (email.value && password.value && nickname.value) {
-    emit('close')
+  if (!email.value) {
+    message.error('请输入邮箱')
+    return
   }
+  if (!emailRegex.test(email.value)) {
+    message.error('请输入正确的邮箱格式')
+    return
+  }
+  if (!password.value) {
+    message.error('请输入密码')
+    return
+  }
+  if (password.value.length !== 6) {
+    message.error('密码必须为6位')
+    return
+  }
+  if (!nickname.value) {
+    message.error('请输入昵称')
+    return
+  }
+  emit('close')
 }
 
 const switchToRegister = () => {
@@ -58,14 +92,12 @@ const switchToLogin = () => {
     <Transition name="modal">
       <div v-if="visible" class="modal-overlay" @click.self="emit('close')">
         <div class="modal-content">
-          <!-- 关闭按钮 -->
           <button class="close-btn" @click="emit('close')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
               <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </button>
 
-          <!-- 标题区域 -->
           <div class="login-header">
             <div class="logo-wrapper">
               <div class="flex h-11 w-11 items-center justify-center rounded-xl text-lg font-bold text-white shadow-md" :style="{ background: `linear-gradient(135deg, var(--theme-color-400), var(--theme-color-600))` }">
@@ -79,7 +111,6 @@ const switchToLogin = () => {
             <p class="app-desc">{{ isRegister ? '创建新账户，开启您的博客之旅' : '欢迎回来，请登录您的账户' }}</p>
           </div>
 
-          <!-- 标签切换 -->
           <div class="tabs" v-if="!isRegister">
             <button 
               class="tab-btn" 
@@ -130,7 +161,6 @@ const switchToLogin = () => {
             </button>
           </div>
 
-          <!-- 表单区域 -->
           <Transition name="fade" mode="out-in">
             <div v-if="!isRegister && activeTab === 'email'" key="email" class="email-form">
               <div class="form-group">
@@ -145,6 +175,10 @@ const switchToLogin = () => {
                     type="email" 
                     placeholder="请输入邮箱" 
                     class="form-input"
+                    :class="{ 
+                      'error': isEmailValid === false, 
+                      'success': isEmailValid === true 
+                    }"
                     @keyup.enter="handleLogin"
                   />
                 </div>
@@ -160,8 +194,12 @@ const switchToLogin = () => {
                   <input 
                     v-model="password"
                     type="password" 
-                    placeholder="请输入至少6位数的密码"
+                    placeholder="请输入6位密码"
                     class="form-input"
+                    :class="{ 
+                      'error': isPasswordValid === false, 
+                      'success': isPasswordValid === true 
+                    }"
                     @keyup.enter="handleLogin"
                   />
                 </div>
@@ -177,7 +215,6 @@ const switchToLogin = () => {
               </div>
             </div>
 
-            <!-- 微信登录 -->
             <div v-else-if="!isRegister && activeTab === 'wechat'" key="wechat" class="wechat-form">
               <div class="qr-code-wrapper">
                 <div class="qr-code">
@@ -191,7 +228,6 @@ const switchToLogin = () => {
               </div>
             </div>
 
-            <!-- 注册表单 -->
             <div v-else key="register" class="email-form">
               <div class="form-group">
                 <label class="form-label">邮箱</label>
@@ -205,6 +241,10 @@ const switchToLogin = () => {
                     type="email" 
                     placeholder="请输入邮箱账号" 
                     class="form-input"
+                    :class="{ 
+                      'error': isEmailValid === false, 
+                      'success': isEmailValid === true 
+                    }"
                     @keyup.enter="handleRegister"
                   />
                 </div>
@@ -220,8 +260,12 @@ const switchToLogin = () => {
                   <input 
                     v-model="password"
                     type="password" 
-                    placeholder="请输入密码" 
+                    placeholder="请输入6位密码" 
                     class="form-input"
+                    :class="{ 
+                      'error': isPasswordValid === false, 
+                      'success': isPasswordValid === true 
+                    }"
                     @keyup.enter="handleRegister"
                   />
                 </div>
@@ -239,6 +283,10 @@ const switchToLogin = () => {
                     type="text" 
                     placeholder="请输入昵称" 
                     class="form-input"
+                    :class="{ 
+                      'error': isNicknameValid === false, 
+                      'success': isNicknameValid === true 
+                    }"
                     @keyup.enter="handleRegister"
                   />
                 </div>
@@ -255,7 +303,6 @@ const switchToLogin = () => {
             </div>
           </Transition>
 
-          <!-- 协议提示 -->
           <div class="agreement-section">
             <div class="agreement-checkbox">
               <svg viewBox="0 0 24 24" fill="var(--theme-color)" stroke="var(--theme-color)" stroke-width="2" class="w-4 h-4">
@@ -426,11 +473,33 @@ const switchToLogin = () => {
   outline: none;
   border-color: var(--theme-color);
   background: #ffffff;
-  box-shadow: 0 0 0 3px rgba(var(--theme-color-rgb), 0.1);
+  box-shadow: 0 0 0 3px rgba(var(--theme-color-100), 0.1);
 }
 
 .form-input::placeholder {
   color: #9ca3af;
+}
+
+.form-input.error {
+  border-color: #ef4444;
+  background: #fef2f2;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.form-input.error:focus {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+}
+
+.form-input.success {
+  border-color: var(--theme-color);
+  background: var(--theme-color-50);
+  box-shadow: 0 0 0 3px rgba(var(--theme-color-100), 0.15);
+}
+
+.form-input.success:focus {
+  border-color: var(--theme-color);
+  box-shadow: 0 0 0 3px rgba(var(--theme-color-100), 0.2);
 }
 
 .submit-btn {
@@ -444,12 +513,12 @@ const switchToLogin = () => {
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 4px 14px rgba(var(--theme-color-rgb), 0.3);
+  box-shadow: 0 4px 14px rgba(var(--theme-color-100), 0.3);
 }
 
 .submit-btn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 6px 18px rgba(var(--theme-color-rgb), 0.35);
+  box-shadow: 0 6px 18px rgba(var(--theme-color-100), 0.35);
 }
 
 .submit-btn:active {
