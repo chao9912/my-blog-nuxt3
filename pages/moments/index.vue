@@ -59,13 +59,13 @@ function updatePage(newPage: number) {
           <p class="text-sm text-gray-500 lg:text-base mt-1">定格美好瞬间，记录闪光时刻</p>
         </div>
 
-        <button class="ml-auto flex items-center gap-2 px-5 py-2.5 text-white font-medium rounded-xl shadow-lg transition-all duration-200" :style="{ background: `linear-gradient(135deg, var(--theme-color-500), var(--theme-color-600))`, boxShadow: `0 10px 25px color-mix(in srgb, var(--theme-color) 30%, transparent)` }" style="hover:box-shadow: 0 12px 30px color-mix(in srgb, var(--theme-color) 40%, transparent);">
+        <NuxtLink to="/moments/create" class="ml-auto flex items-center gap-2 px-5 py-2.5 text-white font-medium rounded-xl shadow-lg transition-all duration-200" :style="{ background: `linear-gradient(135deg, var(--theme-color-500), var(--theme-color-600))`, boxShadow: `0 10px 25px color-mix(in srgb, var(--theme-color) 30%, transparent)` }" style="hover:box-shadow: 0 12px 30px color-mix(in srgb, var(--theme-color) 40%, transparent);">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-5 h-5">
             <line x1="12" y1="5" x2="12" y2="19"/>
             <line x1="5" y1="12" x2="19" y2="12"/>
           </svg>
           <span>发布瞬间</span>
-        </button>
+        </NuxtLink>
       </div>
     </section>
 

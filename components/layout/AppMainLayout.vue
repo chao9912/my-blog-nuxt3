@@ -12,7 +12,7 @@
           <AppHeader />
         </div>
 
-        <main class="min-w-0 pb-4  sm:pb-5 lg:pb-6 ">
+        <main class="min-w-0 ">
           <slot />
         </main>
       </div>
