@@ -8,17 +8,26 @@ import { createToken } from '~/server/utils/jwt'
 export default defineEventHandler(async (event) => {
     const body = await readBody(event)
 
-    const { username, password } = body
+    const { email, password } = body
+
+    if (!email || !password) {
+        return error('请输入邮箱和密码', 400)
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(email)) {
+        return error('请输入正确的邮箱格式', 400)
+    }
 
     const user = await prisma.user.findFirst({
         where: {
-            username,
+            email,
             password
         }
     })
 
     if (!user) {
-        return error('账号或密码错误', 401)
+        return error('邮箱或密码错误', 401)
     }
 
     const token = createToken({
@@ -30,7 +39,9 @@ export default defineEventHandler(async (event) => {
         token,
         userInfo: {
             id: user.id,
-            username: user.username
+            username: user.username,
+            email: user.email,
+            nickname: user.nickname
         }
     })
 })

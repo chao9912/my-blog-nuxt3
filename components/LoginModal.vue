@@ -11,11 +11,14 @@ const emit = defineEmits<{
   (e: 'close'): void
 }>()
 
+const { register } = useApi()
+
 const activeTab = ref<'email' | 'wechat'>('email')
 const isRegister = ref(false)
 const email = ref('')
 const password = ref('')
 const nickname = ref('')
+const isLoading = ref(false)
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -54,7 +57,7 @@ const handleLogin = () => {
   emit('close')
 }
 
-const handleRegister = () => {
+const handleRegister = async () => {
   if (!email.value) {
     message.error('请输入邮箱')
     return
@@ -75,7 +78,24 @@ const handleRegister = () => {
     message.error('请输入昵称')
     return
   }
-  emit('close')
+  
+  isLoading.value = true
+  
+  try {
+    const result = await register(email.value, password.value, nickname.value)
+    
+    if (result) {
+      localStorage.setItem('token', result.token)
+      message.success('注册成功')
+      emit('close')
+    } else {
+      message.error('注册失败，请稍后重试')
+    }
+  } catch (error: any) {
+    message.error(error.response?._data?.message || '注册失败，请稍后重试')
+  } finally {
+    isLoading.value = false
+  }
 }
 
 const switchToRegister = () => {
@@ -292,8 +312,9 @@ const switchToLogin = () => {
                 </div>
               </div>
 
-              <button class="submit-btn" @click="handleRegister">
-                <span>注 册</span>
+              <button class="submit-btn" @click="handleRegister" :disabled="isLoading">
+                <span v-if="isLoading">注册中...</span>
+                <span v-else>注 册</span>
               </button>
 
               <div class="form-footer">

@@ -23,6 +23,18 @@ interface MomentListResponse {
   totalPages: number
 }
 
+interface UserInfo {
+  id: number
+  username: string
+  email: string
+  nickname: string
+}
+
+interface LoginResponse {
+  token: string
+  userInfo: UserInfo
+}
+
 export const useApi = () => {
     const getArticleList = (params?: any) => {
         return $fetch('/api/article/list', {
@@ -76,12 +88,42 @@ export const useApi = () => {
         }
     }
 
+    const login = async (email: string, password: string): Promise<LoginResponse | null> => {
+        const response = await $fetch('/api/user/login', {
+            method: 'POST',
+            body: { email, password }
+        })
+        const data = response as { code: number; data: LoginResponse; message: string }
+        
+        if (data.code === 200 && data.data) {
+            return data.data
+        }
+        
+        return null
+    }
+
+    const register = async (email: string, password: string, nickname: string): Promise<LoginResponse | null> => {
+        const response = await $fetch('/api/user/register', {
+            method: 'POST',
+            body: { email, password, nickname }
+        })
+        const data = response as { code: number; data: LoginResponse; message: string }
+        
+        if (data.code === 200 && data.data) {
+            return data.data
+        }
+        
+        return null
+    }
+
     return {
         getArticleList,
         getArticleDetail,
         createArticle,
         updateArticle,
         deleteArticle,
-        getMomentList
+        getMomentList,
+        login,
+        register
     }
 }
