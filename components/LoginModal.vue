@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useMessage } from 'naive-ui'
+import { local } from '~/utils/storage'
 
 defineProps<{
   visible: boolean
@@ -85,7 +86,7 @@ const handleRegister = async () => {
     const result = await register(email.value, password.value, nickname.value)
     
     if (result) {
-      localStorage.setItem('token', result.token)
+      local.set('BK_Token', result.token)
       message.success('注册成功')
       emit('close')
     } else {
