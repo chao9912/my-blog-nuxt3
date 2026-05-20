@@ -20,7 +20,35 @@ function formatDate(date: Date): string {
   return `${year}-${month}-${day}`
 }
 
-function generateMoments(count: number) {
+function generateUsers(count: number) {
+  const users = []
+  const nicknames = [
+    '阳光少年', '文艺青年', '美食达人', '旅行博主', '摄影爱好者',
+    '程序员小明', '设计师阿杰', '健身教练', '咖啡师小李', '书店老板'
+  ]
+  const occupations = ['程序员', '设计师', '教师', '医生', '自由职业', '学生', '摄影师', '美食家']
+  const locations = ['北京', '上海', '广州', '深圳', '杭州', '成都', '南京', '武汉']
+
+  for (let i = 1; i <= count; i++) {
+    const email = `user${i}@example.com`
+    users.push({
+      username: `user${i}`,
+      password: `password${i}`,
+      nickname: nicknames[(i - 1) % nicknames.length],
+      gender: randomItem(['male', 'female', 'other']),
+      occupation: randomItem(occupations),
+      location: randomItem(locations),
+      email,
+      avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=user${i}`,
+      bio: `大家好，我是${nicknames[(i - 1) % nicknames.length]}，热爱生活，分享美好！`,
+      tags: tags.slice(0, randomInt(2, 5)).join(',')
+    })
+  }
+
+  return users
+}
+
+function generateMoments(count: number, userIds: number[]) {
   const moments = []
   const today = new Date()
   
@@ -33,6 +61,7 @@ function generateMoments(count: number) {
     const category = isVideo ? 'video' : randomItem(['photo', 'mixed', 'all'])
     
     moments.push({
+      publisherId: randomItem(userIds),
       title: getTitle(i),
       desc: getDesc(i),
       cover: `https://picsum.photos/seed/moment${i}/400/300`,
@@ -135,9 +164,24 @@ function getMediaUrls(index: number, isVideo: boolean): string {
 }
 
 async function main() {
+  console.log('开始清空现有数据...')
   await prisma.moment.deleteMany()
-  
-  const moments = generateMoments(42)
+  await prisma.user.deleteMany()
+
+  console.log('创建测试用户...')
+  const users = generateUsers(5)
+  const createdUsers = await prisma.user.createMany({
+    data: users,
+    skipDuplicates: true
+  })
+  console.log(`成功创建 ${createdUsers.count} 个用户`)
+
+  console.log('获取用户ID列表...')
+  const allUsers = await prisma.user.findMany({ select: { id: true } })
+  const userIds = allUsers.map(u => u.id)
+
+  console.log('创建动态数据...')
+  const moments = generateMoments(42, userIds)
   
   for (const moment of moments) {
     await prisma.moment.create({
