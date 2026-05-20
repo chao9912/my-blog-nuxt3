@@ -27,6 +27,8 @@ model Article {
 model Moment {
   /// 动态ID，自增主键
   id          Int      @id @default(autoincrement())
+  /// 发布者ID
+  publisherId Int
   /// 动态标题
   title       String
   /// 动态描述
@@ -53,6 +55,8 @@ model Moment {
   mediaUrls   String 
   /// 创建时间
   createTime  DateTime @default(now())
+  /// 发布者关联
+  publisher   User     @relation(fields: [publisherId], references: [id])
 }
 
 /// 用户表
@@ -83,4 +87,6 @@ model User {
   createTime  DateTime @default(now())
   /// 更新时间
   updateTime  DateTime @updatedAt
+  /// 用户发布的动态列表
+  moments     Moment[]
 }
