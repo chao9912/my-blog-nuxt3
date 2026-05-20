@@ -11,8 +11,7 @@ watch(category, () => {
 
 const { data: momentData, pending: loading, refresh } = useAsyncData(
   () => `moment-list-${page.value}-${category.value}`,
-  () => getMomentList(page.value, pageSize, category.value),
-  { server: false }
+  () => getMomentList(page.value, pageSize, category.value)
 )
 const moments = computed(() => momentData.value?.list || [])
 const total = computed(() => momentData.value?.total || 0)
