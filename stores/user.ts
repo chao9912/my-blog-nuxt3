@@ -7,7 +7,8 @@ interface UserInfo {
     occupation?: string
     avatar?: string
     bio?: string
-    tags?: string[]
+    location?: string
+    tags?: string | string[]
 }
 
 export const useUserStore = defineStore(
@@ -39,6 +40,16 @@ export const useUserStore = defineStore(
             logout() {
                 this.token = ''
                 this.userInfo = {}
+            },
+
+            async refreshUserInfo() {
+                if (this.token && Object.keys(this.userInfo).length === 0) {
+                    const { getUserInfo } = useApi()
+                    const userInfo = await getUserInfo()
+                    if (userInfo) {
+                        this.userInfo = userInfo
+                    }
+                }
             }
         },
 

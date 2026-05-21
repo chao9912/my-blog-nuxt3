@@ -78,6 +78,7 @@
 
 <script setup lang="ts">
 import {zhCN, dateZhCN} from 'naive-ui'
+import { useUserStore } from '~/stores/user'
 
 const showLoading = ref(true)
 const progress = ref(0)
@@ -85,6 +86,7 @@ const progress = ref(0)
 const loadingChars = ['加', '载', '中', '.', '.', '.']
 
 const nuxtApp = useNuxtApp()
+const userStore = useUserStore()
 
 let progressTimer: NodeJS.Timeout
 
@@ -96,6 +98,7 @@ onMounted(() => {
   }, 100)
 
   nuxtApp.hook('page:finish', async () => {
+    await userStore.refreshUserInfo()
     progress.value = 100
 
     await nextTick()
