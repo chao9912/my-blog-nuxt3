@@ -3,12 +3,8 @@ import { success, error } from '~/server/utils/response'
 import { verifyToken } from '~/server/utils/jwt'
 
 export default defineEventHandler(async (event) => {
-    const authorization = event.headers.get('authorization')
-    if (!authorization) {
-        return error('未登录', 401)
-    }
-
-    const token = authorization.replace('Bearer ', '')
+    const token = getCookie(event, 'auth_token')
+    
     if (!token) {
         return error('未登录', 401)
     }
@@ -23,7 +19,12 @@ export default defineEventHandler(async (event) => {
                 id: true,
                 username: true,
                 email: true,
-                nickname: true
+                nickname: true,
+                resume: true,
+                occupation: true,
+                avatar: true,
+                bio: true,
+                tags: true,
             }
         })
 

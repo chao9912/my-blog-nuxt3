@@ -56,16 +56,6 @@
               {{ item.value }}
             </p>
           </div>
-
-          <!-- <svg
-              class="h-4 w-4 shrink-0 text-slate-300 transition-colors duration-200 group-hover:text-slate-400"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              viewBox="0 0 24 24"
-          >
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-          </svg> -->
         </div>
 
         <div
@@ -90,7 +80,7 @@
             <p
                 class="mt-0.5 break-all text-sm font-medium text-slate-700 lg:text-[15px]"
             >
-              查看简历附件
+              {{ user?.resume ? '查看简历附件' : '暂无简历' }}
             </p>
           </div>
 
@@ -110,30 +100,55 @@
 </template>
 
 <script setup lang="ts">
-const handleResumeClick = () => {
-  alert('简历功能开发中，敬请期待！')
+import { computed } from 'vue'
+
+interface UserInfo {
+  id?: number
+  username?: string
+  email?: string
+  nickname?: string
+  resume?: string
+  occupation?: string
+  avatar?: string
+  bio?: string
+  tags?: string[]
 }
 
-const infoList = [
-  {
-    label: '个人昵称',
-    value: '小辫子',
-    icon: '👤'
-  },
-  {
-    label: '昵称',
-    value: '小辫子',
-    icon: '✨'
-  },
-  {
-    label: '职业',
-    value: '前端开发工程师',
-    icon: '💻'
-  },
-  {
-    label: '所在地',
-    value: '上海',
-    icon: '📍'
+const props = defineProps<{
+  user: UserInfo | null | undefined
+}>()
+
+const handleResumeClick = () => {
+  if (props.user?.resume) {
+    window.open(props.user.resume, '_blank')
+  } else {
+    alert('暂无简历')
   }
-]
+}
+
+const infoList = computed(() => {
+  const user = props.user
+  return [
+    {
+      label: '昵称',
+      value: user?.nickname || '--',
+      icon: '👤'
+    },
+    {
+      label: '职业',
+      value: user?.occupation || '--',
+      icon: '💻'
+    },
+    {
+      label: '邮箱',
+      value: user?.email || '--',
+      icon: '✨'
+    },
+    {
+      label: '所在地',
+      value: user?.occupation ||'--',
+      icon: '📍'
+    }
+  ]
+})
 </script>

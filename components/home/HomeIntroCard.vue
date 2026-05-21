@@ -14,13 +14,8 @@
       </div>
 
       <div class="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_180px]">
-        <div class="space-y-4 text-sm leading-relaxed text-slate-600 lg:text-base">
-          <p>
-            热爱产品设计与用户体验，专注于用户需求和产品解决实际问题。
-          </p>
-          <p>
-            喜欢记录生活中的点滴，分享所思所想，期待与更多有趣的人相遇。
-          </p>
+        <div class="text-sm leading-relaxed text-slate-600 lg:text-base whitespace-pre-wrap">
+          {{ displayBio }}
         </div>
 
         <div class="relative flex items-center justify-center">
@@ -53,3 +48,21 @@
     </div>
   </section>
 </template>
+
+<script setup lang="ts">
+import { computed } from 'vue'
+
+interface UserInfo {
+  bio?: string
+}
+
+const props = defineProps<{
+  user?: UserInfo | null
+}>()
+
+const defaultBio = '热爱产品设计与用户体验，专注于用户需求和产品解决实际问题。喜欢记录生活中的点滴，分享所思所想，期待与更多有趣的人相遇。'
+
+const displayBio = computed(() => {
+  return props.user?.bio || defaultBio
+})
+</script>

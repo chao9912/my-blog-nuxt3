@@ -3,6 +3,11 @@ interface UserInfo {
     username?: string
     email?: string
     nickname?: string
+    resume?: string
+    occupation?: string
+    avatar?: string
+    bio?: string
+    tags?: string[]
 }
 
 export const useUserStore = defineStore(

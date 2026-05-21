@@ -13,21 +13,11 @@
             <p class="text-xs text-slate-400">Tags</p>
           </div>
         </div>
-
-        <!-- <button 
-          class="flex items-center gap-1.5 h-9 px-4 rounded-xl text-xs font-medium transition-all duration-200 hover:-translate-y-0.5" 
-          :style="{ backgroundColor: 'var(--theme-color-50)', color: 'var(--theme-color-600)' }"
-        >
-          <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-          </svg>
-          <span>编辑标签</span>
-        </button> -->
       </div>
 
       <div class="flex flex-wrap gap-2.5">
         <span
-          v-for="(tag, index) in tags"
+          v-for="(tag, index) in displayTags"
           :key="tag"
           class="group relative flex items-center gap-1.5 rounded-xl px-4 py-2 text-sm font-medium transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm"
           :style="{ backgroundColor: 'var(--theme-color-50)', color: 'var(--theme-color-600)' }"
@@ -44,7 +34,17 @@
 </template>
 
 <script setup lang="ts">
-const tags = [
+import { computed } from 'vue'
+
+interface UserInfo {
+  tags?: string | string[]
+}
+
+const props = defineProps<{
+  user?: UserInfo | null
+}>()
+
+const defaultTags = [
   '产品思维',
   '用户体验',
   '数据分析',
@@ -54,4 +54,23 @@ const tags = [
   '持续学习',
   '记录生活'
 ]
+
+const displayTags = computed(() => {
+  const userTags = props.user?.tags
+  
+  if (!userTags) {
+    return defaultTags
+  }
+  
+  if (Array.isArray(userTags)) {
+    return userTags.length > 0 ? userTags : defaultTags
+  }
+  
+  if (typeof userTags === 'string') {
+    const parsedTags = userTags.split(',').map(tag => tag.trim()).filter(tag => tag)
+    return parsedTags.length > 0 ? parsedTags : defaultTags
+  }
+  
+  return defaultTags
+})
 </script>
