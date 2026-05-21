@@ -73,6 +73,7 @@ interface UserInfo {
   occupation?: string
   avatar?: string
   bio?: string
+  location?: string
   tags?: string | string[]
 }
 

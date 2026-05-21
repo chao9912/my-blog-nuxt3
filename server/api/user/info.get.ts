@@ -25,6 +25,7 @@ export default defineEventHandler(async (event) => {
                 avatar: true,
                 bio: true,
                 tags: true,
+                location: true,
             }
         })
 
