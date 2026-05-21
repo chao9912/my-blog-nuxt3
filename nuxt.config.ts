@@ -64,7 +64,11 @@ export default defineNuxtConfig({
     build: {
         transpile: ['naive-ui', 'vueuc', '@css-render/vue3-ssr', '@css-render/core']
     },
-
+    nitro: {
+        externals: {
+            exclude: ['@prisma/client']
+        }
+    },
     vite: {
         ssr: {
             noExternal: [
