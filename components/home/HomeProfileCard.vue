@@ -116,19 +116,19 @@ const handleResumeClick = () => {
 
 const infoList = [
   {
-    label: '个人昵称',
-    value: '小辫子',
-    icon: '👤'
-  },
-  {
     label: '昵称',
     value: '小辫子',
-    icon: '✨'
+    icon: '👤'
   },
   {
     label: '职业',
     value: '前端开发工程师',
     icon: '💻'
+  },
+  {
+    label: '邮箱',
+    value: 'example@example.com',
+    icon: '✨'
   },
   {
     label: '所在地',
