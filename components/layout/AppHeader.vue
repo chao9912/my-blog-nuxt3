@@ -36,6 +36,7 @@ const handleSelect = async (e:string) => {
   if (e === 'logout') {
     const { logout } = useApi()
     await logout()
+    window.location.reload()
   } else if (e === 'profile') {
     router.push('/profile')
   }

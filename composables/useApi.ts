@@ -60,7 +60,7 @@ export const useApi = () => {
     const { $apiFetch } = useNuxtApp()
 
     const getArticleList = async (params?: any) => {
-        const response = await $apiFetch('/api/article/list', { params }) as ApiResponse
+        const response = await $apiFetch('/api/article/list', { params:{} }) as ApiResponse
         if (response.code === 401) {
             handleUnauthorized()
             return null
@@ -104,9 +104,10 @@ export const useApi = () => {
         return response
     }
 
-    const getMomentList = async (page: number = 1, pageSize: number = 8, category: string|undefined = undefined): Promise<MomentListResponse> => {
+    const getMomentList = async (page: number = 1, pageSize: number = 8, category: string|undefined = undefined, timeRange: string|undefined = undefined): Promise<MomentListResponse> => {
         const response = await $apiFetch(`/api/moment/list`, {
-            params:{page,pageSize,category:category!=='all'?category:undefined}
+            params:{page,pageSize,category:category!=='all'?category:undefined,timeRange:timeRange||undefined},
+            headers: useRequestEvent()?.headers
         }) as ApiResponse<MomentListResponse>
         
         if (response.code === 401) {
@@ -134,7 +135,9 @@ export const useApi = () => {
     }
 
     const getUserInfo = async (): Promise<UserInfo | null> => {
-        const response = await $apiFetch('/api/user/info') as ApiResponse<UserInfo>
+        const response = await $apiFetch('/api/user/info',{
+            headers: useRequestEvent()?.headers
+        }) as ApiResponse<UserInfo>
         
         if (response.code === 401) {
             handleUnauthorized()

@@ -70,6 +70,7 @@ const handleLogin = async () => {
       password.value = ''
       
       emit('close')
+      window.location.reload()
     } else {
       message.error('登录失败，请稍后重试')
     }
@@ -116,6 +117,7 @@ const handleRegister = async () => {
       nickname.value = ''
       
       emit('close')
+      window.location.reload()
     } else {
       message.error('注册失败，请稍后重试')
     }

@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { useUserStore } from '~/stores/user'
+import {useUserStore} from '~/stores/user'
 
 const userStore = useUserStore()
+const { getMomentList } = useApi()
 const page = ref(1)
 const pageSize = 8
 const category = ref('all')
@@ -15,21 +16,13 @@ watch(timeRange, () => {
   page.value = 1
 })
 
+const fetchMomentList = async () => {
+  return await getMomentList(page.value, pageSize, category.value, timeRange.value)
+}
+
 const { data: momentData, pending: loading, refresh } = useAsyncData(
   'moment-list',
-  async () => {
-    const response = await $fetch(`/api/moment/list`, {
-      params: { 
-        page: page.value, 
-        pageSize, 
-        category: category.value !== 'all' ? category.value : undefined,
-        timeRange: timeRange.value || undefined
-      },
-      credentials: 'include',
-      headers: useRequestEvent()?.headers
-    })
-    return response.data
-  },
+  fetchMomentList,
   {
     server: true,
     watch: [page, category, timeRange]
