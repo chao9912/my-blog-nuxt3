@@ -81,6 +81,8 @@ model User {
   avatar      String?
   /// 个人简介/签名
   bio         String?
+  /// 简历附件地址
+  resume      String?
   /// 个人标签，多个用逗号分隔
   tags        String?
   /// 创建时间
