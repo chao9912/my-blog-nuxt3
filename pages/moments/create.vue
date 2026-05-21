@@ -231,7 +231,7 @@ const handleSubmit = async () => {
         desc: desc.value.trim(),
         cover: cover.value,
         tag: tags.value.join(',') || '日常',
-        date: new Date().toLocaleDateString('zh-CN'),
+        date: new Date().toISOString().split('T')[0],
         category: category.value,
         isVideo: isVideo.value,
         duration: isVideo.value ? duration.value : undefined,

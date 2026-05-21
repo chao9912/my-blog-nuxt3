@@ -5,8 +5,13 @@ const userStore = useUserStore()
 const page = ref(1)
 const pageSize = 8
 const category = ref('all')
+const timeRange = ref('')
 
 watch(category, () => {
+  page.value = 1
+})
+
+watch(timeRange, () => {
   page.value = 1
 })
 
@@ -14,7 +19,12 @@ const { data: momentData, pending: loading, refresh } = useAsyncData(
   'moment-list',
   async () => {
     const response = await $fetch(`/api/moment/list`, {
-      params: { page: page.value, pageSize, category: category.value !== 'all' ? category.value : undefined },
+      params: { 
+        page: page.value, 
+        pageSize, 
+        category: category.value !== 'all' ? category.value : undefined,
+        timeRange: timeRange.value || undefined
+      },
       credentials: 'include',
       headers: useRequestEvent()?.headers
     })
@@ -22,7 +32,7 @@ const { data: momentData, pending: loading, refresh } = useAsyncData(
   },
   {
     server: true,
-    watch: [page, category]
+    watch: [page, category, timeRange]
   }
 )
 const moments = computed(() => momentData.value?.list || [])
@@ -81,7 +91,7 @@ function updatePage(newPage: number) {
     <div class="px-6 py-5 lg:px-10 lg:py-6">
       <div class="animate-slide-up animation-delay-300 flex items-center justify-between ">
         <MomentFilter v-model="category" />
-        <MomentToolbar />
+        <MomentToolbar v-model:timeRange="timeRange" />
       </div>
 
       <div class="animate-slide-up animation-delay-400">

@@ -1,7 +1,10 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 
-const viewMode = ref('grid')
+const emit = defineEmits<{
+  (e: 'update:timeRange', value: string): void
+}>()
+
 const selectedTime = ref('')
 
 const timeOptions = [
@@ -23,15 +26,19 @@ const timeOptions = [
     }
 ]
 
-function toggleView() {
-  viewMode.value = viewMode.value === 'grid' ? 'list' : 'grid'
-}
+watch(selectedTime, (newValue) => {
+  emit('update:timeRange', newValue)
+})
 </script>
 
 <template>
   <div class="flex items-center justify-between">
     <div class="flex items-center gap-3">
-      <ClientSelect v-model="selectedTime" :options="timeOptions"  class="w-40"/>
+      <ClientSelect 
+        v-model="selectedTime" 
+        :options="timeOptions"  
+        class="w-40"
+      />
     </div>
   </div>
 </template>
