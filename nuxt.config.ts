@@ -62,14 +62,9 @@ export default defineNuxtConfig({
     ],
 
     build: {
-        transpile: ['@prisma/client','naive-ui', 'vueuc', '@css-render/vue3-ssr', '@css-render/core']
+        transpile: ['naive-ui', 'vueuc', '@css-render/vue3-ssr', '@css-render/core']
     },
-    nitro: {
-        externals: {
-            externals: ['@prisma/client'], // 告诉 Nitro 不打包 prisma client，使用原生模块
-        },
-        preset: 'vercel-edge' // 若用 Vercel Edge 运行时，需指定（普通 Vercel 可省略）
-    },
+
     vite: {
         ssr: {
             noExternal: [
