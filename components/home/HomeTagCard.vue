@@ -1,22 +1,44 @@
 <template>
-  <section class="rounded-xl border border-slate-100 bg-white p-5 lg:p-6">
-    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-      <h2 class="text-base font-bold text-slate-900 lg:text-lg">个人标签</h2>
+  <section class="relative overflow-hidden rounded-2xl border border-slate-100 bg-white p-6 shadow-sm transition-all duration-300 hover:shadow-md lg:p-8">
+    <div class="absolute -bottom-8 -right-8 w-32 h-32 bg-gradient-to-br opacity-5 rounded-full" :style="{ background: `linear-gradient(135deg, var(--theme-color-200), var(--theme-color-400))` }"></div>
+    
+    <div class="relative z-10">
+      <div class="flex items-center justify-between mb-5">
+        <div class="flex items-center gap-3">
+          <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br transition-transform duration-300" :style="{ background: `linear-gradient(135deg, var(--theme-color-100), var(--theme-color-200))`, color: 'var(--theme-color-600)' }">
+            🏷️
+          </div>
+          <div>
+            <h2 class="text-lg font-bold text-slate-900">个人标签</h2>
+            <p class="text-xs text-slate-400">Tags</p>
+          </div>
+        </div>
 
-      <button class="h-8 rounded-lg px-3 text-xs font-medium lg:h-9 lg:text-sm transition-colors" :style="{ backgroundColor: 'var(--theme-color-50)', color: 'var(--theme-color-600)' }" style="hover:background-color: var(--theme-color-100);">
-        编辑标签
-      </button>
-    </div>
+        <!-- <button 
+          class="flex items-center gap-1.5 h-9 px-4 rounded-xl text-xs font-medium transition-all duration-200 hover:-translate-y-0.5" 
+          :style="{ backgroundColor: 'var(--theme-color-50)', color: 'var(--theme-color-600)' }"
+        >
+          <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+          </svg>
+          <span>编辑标签</span>
+        </button> -->
+      </div>
 
-    <div class="mt-4 flex flex-wrap gap-2">
-      <span
-        v-for="(tag, index) in tags"
-        :key="tag"
-        class="rounded-lg px-3 py-1.5 text-xs font-medium lg:text-sm transition-colors"
-        :style="{ backgroundColor: 'var(--theme-color-50)', color: 'var(--theme-color-600)' }"
-      >
-        {{ tag }}
-      </span>
+      <div class="flex flex-wrap gap-2.5">
+        <span
+          v-for="(tag, index) in tags"
+          :key="tag"
+          class="group relative flex items-center gap-1.5 rounded-xl px-4 py-2 text-sm font-medium transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm"
+          :style="{ backgroundColor: 'var(--theme-color-50)', color: 'var(--theme-color-600)' }"
+        >
+          <span class="absolute inset-0 rounded-xl opacity-0 transition-opacity duration-200 group-hover:opacity-100" :style="{ background: `linear-gradient(135deg, var(--theme-color-100), var(--theme-color-200))` }"></span>
+          <span class="relative z-10">{{ tag }}</span>
+          <svg class="relative z-10 h-3.5 w-3.5 opacity-0 transition-opacity duration-200 group-hover:opacity-100" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </span>
+      </div>
     </div>
   </section>
 </template>
