@@ -24,6 +24,13 @@ const props = defineProps<{
   createTime?: string
 }>()
 
+const tags = computed(() => {
+  if (!props.tag) {
+    return []
+  }
+  return props.tag.split(/[,，]/).map(tag => tag.trim()).filter(tag => tag)
+})
+
 const mediaUrlsList = computed<MediaItem[]>(() => {
   if (!props.mediaUrls) {
     return []
@@ -85,8 +92,14 @@ const mediaUrlsList = computed<MediaItem[]>(() => {
         {{ desc }}
       </p>
 
-      <div class="inline-flex px-3 py-1 rounded-lg bg-[var(--theme-color-50)] text-[var(--theme-color)] text-xs font-medium mb-4">
-        {{ tag }}
+      <div class="flex flex-wrap gap-2 mb-4">
+        <span 
+          v-for="(t, index) in tags" 
+          :key="index"
+          class="inline-flex px-3 py-1 rounded-lg bg-[var(--theme-color-50)] text-[var(--theme-color)] text-xs font-medium"
+        >
+          {{ t }}
+        </span>
       </div>
 
       <div class="flex items-center justify-between text-gray-400 text-xs">

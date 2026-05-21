@@ -1,14 +1,9 @@
 import prisma from '~/server/utils/prisma'
 import { success, error } from '~/server/utils/response'
 import { verifyToken } from '~/server/utils/jwt'
-
+import { defineEventHandler, getCookie, createError, getQuery } from 'h3'
 export default defineEventHandler(async (event) => {
-    const authorization = event.headers.get('authorization')
-    if (!authorization) {
-        return error('未登录', 401)
-    }
-
-    const token = authorization.replace('Bearer ', '')
+    const token = getCookie(event, 'auth_token')
     if (!token) {
         return error('未登录', 401)
     }

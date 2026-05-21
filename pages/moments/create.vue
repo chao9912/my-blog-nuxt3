@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch, nextTick } from 'vue'
 import { useMessage } from 'naive-ui'
 import { useRouter } from 'vue-router'
 
@@ -16,7 +16,9 @@ onMounted(() => {
 
 const title = ref('')
 const desc = ref('')
-const tag = ref('')
+const tags = ref<string[]>([])
+const tagInput = ref('')
+const maxTags = 3
 const category = ref('photo')
 const isVideo = computed(() => category.value === 'video')
 const duration = ref('')
@@ -30,41 +32,184 @@ const categories = [
   { value: 'mixed', label: '图文', icon: '📝' }
 ]
 
+const uploadLimits = {
+  photo: { max: 9, allowImages: true, allowVideos: false },
+  video: { max: 1, allowImages: false, allowVideos: true },
+  mixed: { max: 1, allowImages: true, allowVideos: false }
+}
+
+const currentLimit = computed(() => uploadLimits[category.value as keyof typeof uploadLimits])
+const canAddMedia = computed(() => mediaUrls.value.length < currentLimit.value.max)
+
 const isFormValid = computed(() => {
-  return title.value.trim() && desc.value.trim() && cover.value && mediaUrls.value.length > 0
+  if (!title.value.trim() || !desc.value.trim()) return false
+  if (!cover.value) return false
+  if (mediaUrls.value.length === 0) return false
+  if (isVideo.value && !duration.value) return false
+  return true
 })
 
+const canAddTag = computed(() => tags.value.length < maxTags)
+
+const addTag = () => {
+  const input = tagInput.value.trim()
+  if (!input) return
+  
+  const newTags = input.split(/[,，]/).map(t => t.trim()).filter(t => t && !tags.value.includes(t))
+  
+  newTags.forEach(t => {
+    if (tags.value.length < maxTags) {
+      tags.value.push(t)
+    }
+  })
+  
+  tagInput.value = ''
+}
+
+const removeTag = (index: number) => {
+  tags.value.splice(index, 1)
+}
+
+const handleTagInput = (event: Event) => {
+  const target = event.target as HTMLInputElement
+  const value = target.value
+  
+  if (value.endsWith(',') || value.endsWith('，')) {
+    addTag()
+  }
+}
+
+const coverInputRef = ref<HTMLInputElement | null>(null)
+const mediaInputRef = ref<HTMLInputElement | null>(null)
+
+const getMediaAccept = () => {
+  const limit = currentLimit.value
+  const types = []
+  if (limit.allowImages) {
+    types.push('image/jpeg', 'image/png', 'image/gif', 'image/webp')
+  }
+  if (limit.allowVideos) {
+    types.push('video/mp4', 'video/webm', 'video/ogg', 'video/mov')
+  }
+  return types.join(',')
+}
+
 const handleCoverUpload = async () => {
+  if (!coverInputRef.value) {
+    await nextTick()
+  }
+  coverInputRef.value?.click()
+}
+
+const handleCoverFileChange = async (event: Event) => {
+  const target = event.target as HTMLInputElement
+  const file = target.files?.[0]
+  if (!file) return
+
+  isLoading.value = true
+
   try {
-    const response = await $fetch('/api/upload/image', {
+    const formData = new FormData()
+    formData.append('file', file)
+
+    const response = await fetch('/api/upload/upload', {
       method: 'POST',
-      credentials: 'include',
-      headers: useRequestEvent()?.headers
+      body: formData,
+      credentials: 'include'
     })
-    cover.value = response.data.url
-    message.success('封面上传成功')
+
+    const result = await response.json()
+    
+    if (result.code === 200 && result.data) {
+      cover.value = result.data.url
+      message.success('封面上传成功')
+    } else {
+      message.error(result.message || '封面上传失败')
+    }
   } catch (error) {
-    message.error('封面上传失败')
+    message.error('封面上传失败，请稍后重试')
+  } finally {
+    isLoading.value = false
+    target.value = ''
   }
 }
 
 const handleMediaUpload = async () => {
+  if (!canAddMedia.value) {
+    message.warning(`最多只能上传${currentLimit.value.max}个媒体文件`)
+    return
+  }
+  
+  if (!mediaInputRef.value) {
+    await nextTick()
+  }
+  mediaInputRef.value?.click()
+}
+
+const handleMediaFileChange = async (event: Event) => {
+  const target = event.target as HTMLInputElement
+  const files = target.files
+  if (!files || files.length === 0) return
+
+  isLoading.value = true
+
   try {
-    const response = await $fetch('/api/upload/image', {
-      method: 'POST',
-      credentials: 'include',
-      headers: useRequestEvent()?.headers
+    const uploadPromises = Array.from(files).slice(0, currentLimit.value.max - mediaUrls.value.length).map(async (file) => {
+      const formData = new FormData()
+      formData.append('file', file)
+
+      const response = await fetch('/api/upload/upload', {
+        method: 'POST',
+        body: formData,
+        credentials: 'include'
+      })
+
+      return response.json()
     })
-    mediaUrls.value.push(response.data.url)
-    message.success('媒体上传成功')
+
+    const results = await Promise.all(uploadPromises)
+    
+    let successCount = 0
+    results.forEach(result => {
+      if (result.code === 200 && result.data) {
+        mediaUrls.value.push(result.data.url)
+        successCount++
+      }
+    })
+
+    if (successCount > 0) {
+      message.success(`成功上传${successCount}个媒体文件`)
+    } else {
+      message.error('媒体上传失败')
+    }
   } catch (error) {
-    message.error('媒体上传失败')
+    message.error('媒体上传失败，请稍后重试')
+  } finally {
+    isLoading.value = false
+    target.value = ''
   }
 }
 
 const removeMedia = (index: number) => {
   mediaUrls.value.splice(index, 1)
 }
+
+watch(category, (newVal, oldVal) => {
+  if (newVal !== oldVal) {
+    const limit = uploadLimits[newVal as keyof typeof uploadLimits]
+    
+    if (mediaUrls.value.length > limit.max) {
+      mediaUrls.value = mediaUrls.value.slice(0, limit.max)
+    }
+
+    if (newVal === 'video') {
+      const hasVideo = mediaUrls.value.some(url => url.includes('/videos/'))
+      if (!hasVideo && mediaUrls.value.length > 0) {
+        mediaUrls.value = []
+      }
+    }
+  }
+})
 
 const handleSubmit = async () => {
   if (!isFormValid.value) {
@@ -75,31 +220,35 @@ const handleSubmit = async () => {
   isLoading.value = true
 
   try {
-    const response = await $fetch('/api/moment/create', {
+    const response = await fetch('/api/moment/create', {
       method: 'POST',
-      body: {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include',
+      body: JSON.stringify({
         title: title.value.trim(),
         desc: desc.value.trim(),
         cover: cover.value,
-        tag: tag.value.trim() || '日常',
+        tag: tags.value.join(',') || '日常',
         date: new Date().toLocaleDateString('zh-CN'),
         category: category.value,
         isVideo: isVideo.value,
         duration: isVideo.value ? duration.value : undefined,
         mediaUrls: mediaUrls.value.join(',')
-      },
-      credentials: 'include',
-      headers: useRequestEvent()?.headers
+      })
     })
 
-    if (response.code === 200) {
+    const result = await response.json()
+
+    if (result.code === 200) {
       message.success('发布成功')
       await router.push('/moments')
     } else {
-      message.error(response.message || '发布失败')
+      message.error(result.message || '发布失败')
     }
   } catch (error: any) {
-    message.error(error.response?._data?.message || '发布失败，请稍后重试')
+    message.error(error.message || '发布失败，请稍后重试')
   } finally {
     isLoading.value = false
   }
@@ -112,6 +261,22 @@ const goBack = () => {
 
 <template>
   <div class="create-moment-container">
+    <input 
+      ref="coverInputRef"
+      type="file" 
+      accept="image/*"
+      class="hidden"
+      @change="handleCoverFileChange"
+    />
+    <input 
+      ref="mediaInputRef"
+      type="file" 
+      :accept="getMediaAccept()"
+      :multiple="currentLimit.max > 1"
+      class="hidden"
+      @change="handleMediaFileChange"
+    />
+
     <Transition name="slide-fade">
       <section 
         v-show="isLoaded"
@@ -156,12 +321,41 @@ const goBack = () => {
 
         <div class="form-section">
           <label class="form-label">标签</label>
-          <input 
-            v-model="tag"
-            type="text" 
-            placeholder="添加标签，用逗号分隔" 
-            class="form-input"
-          />
+          <div class="flex flex-wrap gap-2 mb-3">
+            <span 
+              v-for="(t, index) in tags" 
+              :key="index"
+              class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[var(--theme-color-100)] text-[var(--theme-color-700)] text-sm font-medium"
+            >
+              {{ t }}
+              <button 
+                class="w-4 h-4 flex items-center justify-center rounded-full hover:bg-[var(--theme-color-200)] transition-colors"
+                @click="removeTag(index)"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-3 h-3">
+                  <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+              </button>
+            </span>
+            <span v-if="tags.length === 0" class="text-sm text-gray-400">
+              点击下方输入框添加标签
+            </span>
+          </div>
+          <div class="relative">
+            <input 
+              v-model="tagInput"
+              type="text" 
+              :placeholder="canAddTag ? '输入标签后按逗号或回车添加' : `最多添加${maxTags}个标签`" 
+              :disabled="!canAddTag"
+              class="form-input"
+              :class="{ 'opacity-50 cursor-not-allowed': !canAddTag }"
+              @input="handleTagInput"
+              @keydown.enter.prevent="addTag"
+            />
+            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-gray-400">
+              {{ tags.length }}/{{ maxTags }}
+            </span>
+          </div>
         </div>
 
         <div class="form-section">
@@ -176,6 +370,10 @@ const goBack = () => {
             >
               <span class="text-lg">{{ cat.icon }}</span>
               <span>{{ cat.label }}</span>
+              <span class="text-xs text-gray-400 mt-1">{{ 
+                cat.value === 'photo' ? '多图' : 
+                cat.value === 'video' ? '单视频' : '单图' 
+              }}</span>
             </button>
           </div>
         </div>
@@ -217,12 +415,17 @@ const goBack = () => {
             <label class="form-label">媒体资源</label>
             <button 
               class="add-media-btn flex items-center gap-1 text-sm text-theme-color hover:opacity-80 transition-opacity"
+              :disabled="!canAddMedia"
+              :class="{ disabled: !canAddMedia }"
               @click="handleMediaUpload"
             >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
                 <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
               </svg>
-              <span>添加图片/视频</span>
+              <span>添加{{ isVideo ? '视频' : '图片' }}</span>
+              <span v-if="mediaUrls.length > 0" class="text-xs opacity-60">
+                ({{ mediaUrls.length }}/{{ currentLimit.max }})
+              </span>
             </button>
           </div>
           <div class="media-grid">
@@ -231,7 +434,12 @@ const goBack = () => {
               :key="index"
               class="media-item"
             >
-              <img :src="url" :alt="`媒体${index + 1}`" />
+              <div v-if="url.includes('/videos/')" class="video-thumbnail">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-8 h-8">
+                  <polygon points="5 3 19 12 5 21 5 3"/>
+                </svg>
+              </div>
+              <img v-else :src="url" :alt="`媒体${index + 1}`" />
               <button class="remove-btn" @click="removeMedia(index)">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
                   <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
@@ -243,7 +451,7 @@ const goBack = () => {
                 <rect x="3" y="3" width="18" height="18" rx="2"/>
                 <circle cx="12" cy="12" r="4"/>
               </svg>
-              <span>暂无媒体</span>
+              <span>{{ isVideo ? '请上传视频' : '请上传图片' }}</span>
             </div>
           </div>
         </div>
@@ -420,7 +628,7 @@ const goBack = () => {
 
 .category-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 12px;
 }
 
@@ -428,7 +636,7 @@ const goBack = () => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   padding: 16px 10px;
   border: 2px solid #e2e8f0;
   border-radius: 16px;
@@ -472,8 +680,8 @@ const goBack = () => {
 }
 
 .category-btn span:last-child {
-  font-size: 13px;
-  color: #64748b;
+  font-size: 12px;
+  color: #94a3b8;
   font-weight: 500;
 }
 
@@ -491,7 +699,6 @@ const goBack = () => {
 
 .category-btn.active span:last-child {
   color: var(--theme-color);
-  font-weight: 600;
 }
 
 .video-toggle {
@@ -611,9 +818,14 @@ const goBack = () => {
   transition: all 0.25s ease;
 }
 
-.add-media-btn:hover {
+.add-media-btn:hover:not(.disabled) {
   background: var(--theme-color-50);
   transform: scale(1.02);
+}
+
+.add-media-btn.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .media-grid {
@@ -646,6 +858,16 @@ const goBack = () => {
 
 .media-item:hover img {
   transform: scale(1.1);
+}
+
+.video-thumbnail {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #1e293b, #334155);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
 }
 
 .media-item .remove-btn {
