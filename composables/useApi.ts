@@ -32,10 +32,16 @@ interface MomentListResponse {
 }
 
 interface UserInfo {
-  id: number
-  username: string
-  email: string
-  nickname: string
+  id?: number
+  username?: string
+  email?: string
+  nickname?: string
+  resume?: string
+  occupation?: string
+  avatar?: string
+  bio?: string
+  location?: string
+  tags?: string | string[]
 }
 
 interface LoginResponse {
@@ -127,6 +133,21 @@ export const useApi = () => {
         }
     }
 
+    const getUserInfo = async (): Promise<UserInfo | null> => {
+        const response = await $apiFetch('/api/user/info') as ApiResponse<UserInfo>
+        
+        if (response.code === 401) {
+            handleUnauthorized()
+            return null
+        }
+        
+        if (response.code === 200 && response.data) {
+            return response.data
+        }
+        
+        return null
+    }
+
     const login = async (email: string, password: string): Promise<LoginResponse | null> => {
         const response = await $apiFetch('/api/user/login', {
             method: 'POST',
@@ -182,6 +203,7 @@ export const useApi = () => {
         updateArticle,
         deleteArticle,
         getMomentList,
+        getUserInfo,
         login,
         register,
         logout

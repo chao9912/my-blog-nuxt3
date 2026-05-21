@@ -59,49 +59,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import {useUserStore} from "~/stores/user";
+import {ref} from 'vue'
+import {useApi} from '~/composables/useApi'
 
 const showLogin = ref(false)
-
-interface UserInfo {
-  id?: number
-  username?: string
-  email?: string
-  nickname?: string
-  resume?: string
-  occupation?: string
-  avatar?: string
-  bio?: string
-  location?: string
-  tags?: string | string[]
-}
+const { getUserInfo } = useApi()
 
 const { data: userData, pending: loading } = useAsyncData('userInfo', async () => {
   try {
-    const headers: Record<string, string> = {}
-    
-    if (process.server) {
-      const event = useRequestEvent()
-      const cookie = event?.headers.get('cookie')
-      if (cookie) {
-        headers.cookie = cookie
-      }
-    }
-
-    const response = await $fetch('/api/user/info', {
-      credentials: 'include',
-      headers
-    }) as { code: number; data: UserInfo }
-
-    if (response.code === 200) {
-      return response.data
-    }
+    return await getUserInfo()
   } catch (error) {
-    if (process.client) {
-      const userStore = useUserStore()
-      userStore.logout()
-    }
     console.error('Failed to fetch user info:', error)
   }
   return null
