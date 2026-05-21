@@ -1,15 +1,17 @@
-import { PrismaClient } from '@prisma/client'
+import prismaPkg from '@prisma/client'
+
+const { PrismaClient } = prismaPkg
 
 const globalForPrisma = globalThis as unknown as {
-    prisma: PrismaClient | undefined
+    prisma: InstanceType<typeof PrismaClient> | undefined
 }
 
 export const prisma =
     globalForPrisma.prisma ??
-    new PrismaClient()
+    new PrismaClient({
+        log: ['error']
+    })
 
 if (process.env.NODE_ENV !== 'production') {
     globalForPrisma.prisma = prisma
 }
-
-export default prisma

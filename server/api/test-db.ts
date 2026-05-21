@@ -1,5 +1,5 @@
 // 测试数据库连接专用接口
-import prisma from '~/server/utils/prisma'
+import {prisma} from '~/server/utils/prisma'
 
 export default defineEventHandler(async (e) => {
     try {
@@ -15,7 +15,7 @@ export default defineEventHandler(async (e) => {
         return {
             status: 'error',
             message: '❌ 数据库连接失败',
-            error: error.message
+            error: error?.message
         }
     }
 })

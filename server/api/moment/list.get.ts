@@ -1,4 +1,4 @@
-import prisma from '~/server/utils/prisma'
+import {prisma} from '~/server/utils/prisma'
 import { success, error } from '~/server/utils/response'
 import { verifyToken } from '~/server/utils/jwt'
 import { defineEventHandler, getCookie, createError, getQuery } from 'h3'
