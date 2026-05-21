@@ -1,5 +1,11 @@
 {
   // https://nuxt.com/docs/guide/concepts/typescript
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "NodeNext",
+    "esModuleInterop": true, // 关键：允许 ESM 兼容 CommonJS 模块
+    "skipLibCheck": true
+  },
   "files": [],
   "references": [
     {
