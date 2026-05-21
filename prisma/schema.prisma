@@ -3,8 +3,10 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
+  /// 只保留这一行，适配 Supabase 免费版，解决所有报错
+  relationMode = "prisma"
 }
 
 /// 文章表
