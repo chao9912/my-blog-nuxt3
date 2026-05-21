@@ -16,6 +16,7 @@
     "prisma:sync": "pnpm prisma db push && pnpm prisma generate",
     "prisma:studio": "pnpm prisma studio",
     "prisma:migrate": "pnpm prisma migrate dev",
+    "buildCommand": "pnpm prisma generate && nuxt build",
     "seed": "pnpm prisma db seed"
   },
   "dependencies": {
