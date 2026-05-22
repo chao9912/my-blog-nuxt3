@@ -1,10 +1,9 @@
 import { defineEventHandler, readMultipartFormData, createError } from 'h3'
-import fs from 'fs/promises'
-import path from 'path'
 import crypto from 'crypto'
 import { verifyToken } from '~/server/utils/jwt'
 import { error, success } from '#server/utils/response'
 import { getCookie } from 'h3'
+import { useServerSupabase } from '~/server/utils/supabase'
 
 const FILE_CONFIG = {
     images: {
@@ -14,7 +13,7 @@ const FILE_CONFIG = {
     },
     videos: {
         types: ['video/mp4', 'video/webm', 'video/ogg', 'video/mov'],
-        maxSize: 100 * 1024 * 1024,
+        maxSize: 50 * 1024 * 1024,
         directory: 'videos'
     }
 }
@@ -61,16 +60,32 @@ export default defineEventHandler(async (event) => {
             return error(`${category === 'images' ? '图片' : '视频'}文件不能超过${sizeMB}MB`, 400)
         }
 
+        const supabase = useServerSupabase()
+        
+        if (!supabase) {
+            return error('Supabase 客户端初始化失败', 500)
+        }
+
         const fileExt = file.filename!.split('.').pop()?.toLowerCase() || ''
         const fileName = `${crypto.randomUUID()}.${fileExt}`
+        const storagePath = `public/${config.directory}/${fileName}`
 
-        const uploadDir = path.join(process.cwd(), 'public/uploads', config.directory)
-        await fs.mkdir(uploadDir, { recursive: true })
-        const filePath = path.join(uploadDir, fileName)
+        try {
+            const { error: uploadError } = await supabase.storage.from('uploads').upload(storagePath, file.data, {
+                contentType: fileType,
+            })
 
-        await fs.writeFile(filePath, file.data)
+            if (uploadError) {
+                console.error('Supabase upload error:', uploadError)
+                return error('文件上传失败: ' + uploadError.message, 500)
+            }
+        } catch (err) {
+            console.error('Supabase fetch error:', err)
+            return error('文件上传失败: ' + (err as Error).message, 500)
+        }
 
-        const fileUrl = `/uploads/${config.directory}/${fileName}`
+        const { data: { publicUrl } } = supabase.storage.from('uploads').getPublicUrl(storagePath)
+        const fileUrl = publicUrl
         return success({
             url: fileUrl,
             name: file.filename,

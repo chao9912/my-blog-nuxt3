@@ -65,8 +65,6 @@ const mediaUrlsList = computed<MediaItem[]>(() => {
       <n-carousel
           autoplay
           v-if="category==='photo'"
-          direction="vertical"
-          dot-placement="right"
           class="w-full h-[200px]">
         <img class="object-cover" v-for="item in mediaUrlsList" :key="item.vKey" :src="item.url" alt="图片">
       </n-carousel>
