@@ -7,6 +7,13 @@ import {NaiveUiResolver} from 'unplugin-vue-components/resolvers'
 export default defineNuxtConfig({
     compatibilityDate: '2026-05-13',
 
+    runtimeConfig: {
+        supabaseServiceKey: process.env.NUXT_SUPABASE_SERVICE_KEY,
+        public: {
+            supabaseUrl: process.env.NUXT_PUBLIC_SUPABASE_URL
+        }
+    },
+
     ssr: true,
     devServer: {
         host: '0.0.0.0',
