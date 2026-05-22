@@ -13,7 +13,7 @@ const FILE_CONFIG = {
     },
     videos: {
         types: ['video/mp4', 'video/webm', 'video/ogg', 'video/mov'],
-        maxSize: 100 * 1024 * 1024,
+        maxSize: 50 * 1024 * 1024,
         directory: 'videos'
     }
 }
