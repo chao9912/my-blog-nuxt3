@@ -5,8 +5,8 @@ const prisma = new PrismaClient()
 const tags = ['旅行', '生活', '美食', '随拍', '宠物', '工作', '运动', '音乐', '电影', '科技']
 const categories = ['all', 'photo', 'video', 'mixed']
 
-function randomItem(arr: string[]) {
-  return arr[Math.floor(Math.random() * arr.length)]
+function randomItem<T>(arr: T[]): T {
+  return arr[Math.floor(Math.random() * arr.length)]!
 }
 
 function randomInt(min: number, max: number) {
@@ -34,7 +34,7 @@ function generateUsers(count: number) {
     users.push({
       username: `user${i}`,
       password: `password${i}`,
-      nickname: nicknames[(i - 1) % nicknames.length],
+      nickname: nicknames[(i - 1) % nicknames.length]!,
       gender: randomItem(['male', 'female', 'other']),
       occupation: randomItem(occupations),
       location: randomItem(locations),
@@ -94,7 +94,7 @@ function getTitle(index: number): string {
     '美食探店推荐', '自然风光摄影', '城市街头随拍', '宠物成长记录',
     '节日庆祝活动', '运动健身日常', '文化艺术展览', '音乐推荐分享'
   ]
-  return titles[(index - 1) % titles.length]
+  return titles[(index - 1) % titles.length]!
 }
 
 function getDesc(index: number): string {
@@ -142,7 +142,7 @@ function getDesc(index: number): string {
     '会议室的讨论，头脑风暴...',
     '舞台上的表演，闪耀光芒...'
   ]
-  return descs[(index - 1) % descs.length]
+  return descs[(index - 1) % descs.length]!
 }
 
 function getDuration(): string {
