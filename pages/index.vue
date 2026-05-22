@@ -1,5 +1,5 @@
 <template>
-  <div class="home-container">
+  <div class="home-container pb-5">
     <div v-if="loading" class="min-h-screen flex items-center justify-center">
       <div class="flex flex-col items-center gap-3">
         <div class="w-10 h-10 border-4 border-slate-200 border-t-theme-color rounded-full animate-spin"></div>
@@ -8,7 +8,7 @@
     </div>
 
     <template v-else-if="!userData">
-      <div class="min-h-screen flex items-center justify-center p-5">
+      <div class="min-h-[calc(100vh-140px)] lg:min-h-screen flex items-center justify-center p-5">
         <div class="w-full max-w-md text-center">
           <div class="inline-flex h-20 w-20 items-center justify-center rounded-full mb-6" :style="{ backgroundColor: 'var(--theme-color-100)' }">
             <span class="text-4xl">👤</span>

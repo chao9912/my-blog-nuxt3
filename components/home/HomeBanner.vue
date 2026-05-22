@@ -1,7 +1,7 @@
 <script setup lang="ts">
 </script>
 <template>
-  <section class="banner-cu relative overflow-hidden bg-gradient-to-br from-[#E5F0FF] via-[#E8F3FF] to-[#F0F7FF] px-6 pb-8 pt-[84px] lg:px-10 lg:pb-12 lg:pt-[84px]">
+  <section class="banner-cu relative overflow-hidden bg-gradient-to-br from-[#E5F0FF] via-[#E8F3FF] to-[#F0F7FF] px-6 pb-8 pt-[30px] lg:px-10 lg:pb-12 lg:pt-[84px]">
     <div class="absolute inset-0 z-0 overflow-hidden">
       <svg class="absolute -bottom-8 left-0 w-full" viewBox="0 0 1440 200" xmlns="http://www.w3.org/2000/svg">
         <path d="M0,120 C360,60 720,150 1080,90 C1260,60 1380,80 1440,100 L1440,200 L0,200 Z" fill="#D4E5FF" fill-opacity="0.7"/>

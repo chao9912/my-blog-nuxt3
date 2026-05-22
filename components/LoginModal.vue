@@ -2,6 +2,7 @@
 import { ref, computed } from 'vue'
 import { useMessage } from 'naive-ui'
 import { useUserStore } from '~/stores/user'
+import { useApi } from '~/composables/useApi'
 
 defineProps<{
   visible: boolean

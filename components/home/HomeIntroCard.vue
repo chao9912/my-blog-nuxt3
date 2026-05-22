@@ -18,7 +18,7 @@
           {{ displayBio }}
         </div>
 
-        <div class="relative flex items-center justify-center">
+        <div class="hidden lg:block relative flex items-center justify-center">
           <div class="absolute -inset-3 rounded-2xl opacity-20 blur-xl" :style="{ background: `linear-gradient(135deg, var(--theme-color-200), var(--theme-color-300))` }"></div>
           <svg class="relative w-full max-w-[120px] h-auto transition-transform duration-300 hover:scale-105" viewBox="0 0 120 140" fill="none">
             <rect x="20" y="70" width="20" height="55" rx="2" :style="{ fill: 'var(--theme-color-50)' }" />
