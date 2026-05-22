@@ -3,24 +3,25 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider     = "postgresql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 /// 文章表
 model Article {
   /// 文章ID，自增主键
-  id          Int      @id @default(autoincrement())
+  id         Int      @id @default(autoincrement())
   /// 文章标题
-  title       String
+  title      String
   /// 文章描述
-  desc        String?
+  desc       String?
   /// 文章内容
-  content     String
+  content    String
   /// 文章封面图片地址
-  cover       String?
+  cover      String?
   /// 创建时间
-  createTime  DateTime @default(now())
+  createTime DateTime @default(now())
 }
 
 /// 动态/时刻表
@@ -52,43 +53,41 @@ model Moment {
   /// 分类（all:全部, photo:照片, video:视频, mixed:图文）
   category    String   @default("all")
   /// 媒体地址，多个用逗号分隔
-  mediaUrls   String 
+  mediaUrls   String
   /// 创建时间
   createTime  DateTime @default(now())
-  /// 发布者关联
   publisher   User     @relation(fields: [publisherId], references: [id])
 }
 
 /// 用户表
 model User {
   /// 用户ID，自增主键
-  id          Int      @id @default(autoincrement())
+  id         Int      @id @default(autoincrement())
   /// 用户名，唯一，用于登录
-  username    String   @unique
+  username   String   @unique
   /// 密码（加密存储）
-  password    String
+  password   String
   /// 昵称/个人昵称
-  nickname    String
+  nickname   String
   /// 性别（male:男, female:女, other:其他）
-  gender      String   @default("other")
+  gender     String   @default("other")
   /// 职业
-  occupation  String?
+  occupation String?
   /// 所在地
-  location    String?
+  location   String?
   /// 邮箱
-  email       String?  @unique
+  email      String?  @unique
   /// 头像地址
-  avatar      String?
+  avatar     String?
   /// 个人简介/签名
-  bio         String?
+  bio        String?
   /// 简历附件地址
-  resume      String?
+  resume     String?
   /// 个人标签，多个用逗号分隔
-  tags        String?
+  tags       String?
   /// 创建时间
-  createTime  DateTime @default(now())
+  createTime DateTime @default(now())
   /// 更新时间
-  updateTime  DateTime @updatedAt
-  /// 用户发布的动态列表
-  moments     Moment[]
+  updateTime DateTime @updatedAt
+  moments    Moment[]
 }
